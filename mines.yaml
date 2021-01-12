@@ -1,0 +1,771 @@
+---
+1:
+  coal: 100.00
+2:
+  coal: 70.00
+  copper: 30.00
+3:
+  coal: 59.50
+  copper: 28.33
+  iron: 9.17
+  amber: 2.50
+  gold: 0.50
+4:
+  coal: 54.25
+  copper: 32.50
+  iron: 10.25
+  amber: 2.25
+  gold: 0.75
+5:
+  coal: 49.00
+  copper: 36.67
+  iron: 11.33
+  amber: 2.00
+  gold: 1.00
+6:
+  coal: 43.75
+  copper: 40.83
+  iron: 12.42
+  amber: 1.75
+  gold: 1.25
+7:
+  copper: 45.00
+  coal: 38.50
+  iron: 13.50
+  gold: 1.50
+  amber: 1.50
+8:
+  copper: 49.17
+  coal: 33.25
+  iron: 14.58
+  gold: 1.75
+  amber: 1.25
+9:
+  copper: 53.33
+  coal: 28.00
+  iron: 15.67
+  gold: 2.00
+  amber: 1.00
+10:
+  copper: 57.50
+  coal: 22.75
+  iron: 16.75
+  gold: 2.25
+  amber: 0.75
+11:
+  copper: 61.67
+  iron: 17.83
+  coal: 17.50
+  gold: 2.50
+  amber: 0.50
+12:
+  copper: 65.83
+  iron: 18.92
+  coal: 12.25
+  gold: 2.75
+  amber: 0.25
+13:
+  copper: 100.00
+14:
+  copper: 70.00
+  iron: 30.00
+15:
+  copper: 58.33
+  iron: 19.50
+  amber: 10.00
+  coal: 5.83
+  aluminium: 3.33
+  gold: 2.50
+  silver: 0.50
+16:
+  copper: 52.50
+  iron: 19.25
+  amber: 15.00
+  coal: 5.25
+  aluminium: 5.00
+  gold: 2.25
+  silver: 0.75
+17:
+  copper: 46.67
+  amber: 20.00
+  iron: 19.00
+  aluminium: 6.67
+  coal: 4.67
+  gold: 2.00
+  silver: 1.00
+18:
+  copper: 40.83
+  amber: 25.00
+  iron: 18.75
+  aluminium: 8.33
+  coal: 4.08
+  gold: 1.75
+  silver: 1.25
+19:
+  copper: 35.00
+  amber: 30.00
+  iron: 18.50
+  aluminium: 10.00
+  coal: 3.50
+  silver: 1.50
+  gold: 1.50
+20:
+  amber: 35.00
+  copper: 29.17
+  iron: 18.25
+  aluminium: 11.67
+  coal: 2.92
+  silver: 1.75
+  gold: 1.25
+21:
+  amber: 40.00
+  copper: 23.33
+  iron: 18.00
+  aluminium: 13.33
+  coal: 2.33
+  silver: 2.00
+  gold: 1.00
+22:
+  amber: 45.00
+  iron: 17.75
+  copper: 17.50
+  aluminium: 15.00
+  silver: 2.25
+  coal: 1.75
+  gold: 0.75
+23:
+  amber: 50.00
+  iron: 17.50
+  aluminium: 16.67
+  copper: 11.67
+  silver: 2.50
+  coal: 1.17
+  gold: 0.50
+24:
+  amber: 55.00
+  aluminium: 18.33
+  iron: 17.25
+  copper: 5.83
+  silver: 2.75
+  coal: 0.58
+  gold: 0.25
+25:
+  amber: 100.00
+26:
+  amber: 70.00
+  aluminium: 30.00
+27:
+  amber: 50.00
+  aluminium: 26.67
+  iron: 19.17
+  silver: 4.17
+28:
+  amber: 45.00
+  aluminium: 30.00
+  iron: 20.25
+  silver: 4.75
+29:
+  amber: 40.00
+  aluminium: 33.33
+  iron: 21.33
+  silver: 5.33
+30:
+  aluminium: 36.67
+  amber: 35.00
+  iron: 22.42
+  silver: 5.92
+31:
+  aluminium: 40.00
+  amber: 30.00
+  iron: 23.50
+  silver: 6.50
+32:
+  aluminium: 43.33
+  amber: 25.00
+  iron: 24.58
+  silver: 7.08
+33:
+  aluminium: 46.67
+  iron: 25.67
+  amber: 20.00
+  silver: 7.67
+34:
+  aluminium: 50.00
+  iron: 26.75
+  amber: 15.00
+  silver: 8.25
+35:
+  aluminium: 53.33
+  iron: 27.83
+  amber: 10.00
+  silver: 8.83
+36:
+  aluminium: 56.67
+  iron: 28.92
+  silver: 9.42
+  amber: 5.00
+37:
+  aluminium: 100.00
+38:
+  aluminium: 70.00
+  iron: 30.00
+39:
+  aluminium: 50.00
+  iron: 25.00
+  silver: 11.17
+  gold: 10.00
+  emerald: 3.83
+40:
+  aluminium: 45.00
+  iron: 22.50
+  gold: 15.00
+  silver: 11.75
+  emerald: 5.75
+41:
+  aluminium: 40.00
+  iron: 20.00
+  gold: 20.00
+  silver: 12.33
+  emerald: 7.67
+42:
+  aluminium: 35.00
+  gold: 25.00
+  iron: 17.50
+  silver: 12.92
+  emerald: 9.58
+43:
+  gold: 30.00
+  aluminium: 30.00
+  iron: 15.00
+  silver: 13.50
+  emerald: 11.50
+44:
+  gold: 35.00
+  aluminium: 25.00
+  silver: 14.08
+  emerald: 13.42
+  iron: 12.50
+45:
+  gold: 40.00
+  aluminium: 20.00
+  emerald: 15.33
+  silver: 14.67
+  iron: 10.00
+46:
+  gold: 45.00
+  emerald: 17.25
+  silver: 15.25
+  aluminium: 15.00
+  iron: 7.50
+47:
+  gold: 50.00
+  emerald: 19.17
+  silver: 15.83
+  aluminium: 10.00
+  iron: 5.00
+48:
+  gold: 55.00
+  emerald: 21.08
+  silver: 16.42
+  aluminium: 5.00
+  iron: 2.50
+49:
+  gold: 100.00
+50:
+  gold: 70.00
+  emerald: 30.00
+51:
+  gold: 50.00
+  emerald: 25.83
+  silver: 14.17
+  ruby: 5.00
+  diamond: 3.33
+  topaz: 1.67
+52:
+  gold: 45.00
+  emerald: 27.25
+  silver: 12.75
+  ruby: 7.50
+  diamond: 5.00
+  topaz: 2.50
+53:
+  gold: 40.00
+  emerald: 28.67
+  silver: 11.33
+  ruby: 10.00
+  diamond: 6.67
+  topaz: 3.33
+54:
+  gold: 35.00
+  emerald: 30.08
+  ruby: 12.50
+  silver: 9.92
+  diamond: 8.33
+  topaz: 4.17
+55:
+  emerald: 31.50
+  gold: 30.00
+  ruby: 15.00
+  diamond: 10.00
+  silver: 8.50
+  topaz: 5.00
+56:
+  emerald: 32.92
+  gold: 25.00
+  ruby: 17.50
+  diamond: 11.67
+  silver: 7.08
+  topaz: 5.83
+57:
+  emerald: 34.33
+  ruby: 20.00
+  gold: 20.00
+  diamond: 13.33
+  topaz: 6.67
+  silver: 5.67
+58:
+  emerald: 35.75
+  ruby: 22.50
+  gold: 15.00
+  diamond: 15.00
+  topaz: 7.50
+  silver: 4.25
+59:
+  emerald: 37.17
+  ruby: 25.00
+  diamond: 16.67
+  gold: 10.00
+  topaz: 8.33
+  silver: 2.83
+60:
+  emerald: 38.58
+  ruby: 27.50
+  diamond: 18.33
+  topaz: 9.17
+  gold: 5.00
+  silver: 1.42
+61:
+  emerald: 100.00
+62:
+  emerald: 70.00
+  ruby: 30.00
+63:
+  emerald: 33.33
+  ruby: 31.67
+  diamond: 16.67
+  topaz: 13.33
+  sapphire: 3.33
+  amethyst: 1.67
+64:
+  ruby: 32.50
+  emerald: 30.00
+  topaz: 15.00
+  diamond: 15.00
+  sapphire: 5.00
+  amethyst: 2.50
+65:
+  ruby: 33.33
+  emerald: 26.67
+  topaz: 16.67
+  diamond: 13.33
+  sapphire: 6.67
+  amethyst: 3.33
+66:
+  ruby: 34.17
+  emerald: 23.33
+  topaz: 18.33
+  diamond: 11.67
+  sapphire: 8.33
+  amethyst: 4.17
+67:
+  ruby: 35.00
+  topaz: 20.00
+  emerald: 20.00
+  sapphire: 10.00
+  diamond: 10.00
+  amethyst: 5.00
+68:
+  ruby: 35.83
+  topaz: 21.67
+  emerald: 16.67
+  sapphire: 11.67
+  diamond: 8.33
+  amethyst: 5.83
+69:
+  ruby: 36.67
+  topaz: 23.33
+  sapphire: 13.33
+  emerald: 13.33
+  diamond: 6.67
+  amethyst: 6.67
+70:
+  ruby: 37.50
+  topaz: 25.00
+  sapphire: 15.00
+  emerald: 10.00
+  amethyst: 7.50
+  diamond: 5.00
+71:
+  ruby: 38.33
+  topaz: 26.67
+  sapphire: 16.67
+  amethyst: 8.33
+  emerald: 6.67
+  diamond: 3.33
+72:
+  ruby: 39.17
+  topaz: 28.33
+  sapphire: 18.33
+  amethyst: 9.17
+  emerald: 3.33
+  diamond: 1.67
+73:
+  ruby: 100.00
+74:
+  ruby: 70.00
+  topaz: 30.00
+75:
+  ruby: 33.33
+  topaz: 25.00
+  sapphire: 16.67
+  amethyst: 15.00
+  alexandrite: 4.50
+  titanium_ore: 3.33
+  uranium: 1.67
+  platinum: 0.50
+76:
+  ruby: 30.00
+  topaz: 22.50
+  amethyst: 17.50
+  sapphire: 15.00
+  alexandrite: 6.75
+  titanium_ore: 5.00
+  uranium: 2.50
+  platinum: 0.75
+77:
+  ruby: 26.67
+  topaz: 20.00
+  amethyst: 20.00
+  sapphire: 13.33
+  alexandrite: 9.00
+  titanium_ore: 6.67
+  uranium: 3.33
+  platinum: 1.00
+78:
+  ruby: 23.33
+  amethyst: 22.50
+  topaz: 17.50
+  sapphire: 11.67
+  alexandrite: 11.25
+  titanium_ore: 8.33
+  uranium: 4.17
+  platinum: 1.25
+79:
+  amethyst: 25.00
+  ruby: 20.00
+  topaz: 15.00
+  alexandrite: 13.50
+  titanium_ore: 10.00
+  sapphire: 10.00
+  uranium: 5.00
+  platinum: 1.50
+80:
+  amethyst: 27.50
+  ruby: 16.67
+  alexandrite: 15.75
+  topaz: 12.50
+  titanium_ore: 11.67
+  sapphire: 8.33
+  uranium: 5.83
+  platinum: 1.75
+81:
+  amethyst: 30.00
+  alexandrite: 18.00
+  titanium_ore: 13.33
+  ruby: 13.33
+  topaz: 10.00
+  uranium: 6.67
+  sapphire: 6.67
+  platinum: 2.00
+82:
+  amethyst: 32.50
+  alexandrite: 20.25
+  titanium_ore: 15.00
+  ruby: 10.00
+  uranium: 7.50
+  topaz: 7.50
+  sapphire: 5.00
+  platinum: 2.25
+83:
+  amethyst: 35.00
+  alexandrite: 22.50
+  titanium_ore: 16.67
+  uranium: 8.33
+  ruby: 6.67
+  topaz: 5.00
+  sapphire: 3.33
+  platinum: 2.50
+84:
+  amethyst: 37.50
+  alexandrite: 24.75
+  titanium_ore: 18.33
+  uranium: 9.17
+  ruby: 3.33
+  platinum: 2.75
+  topaz: 2.50
+  sapphire: 1.67
+85:
+  amethyst: 100.00
+86:
+  amethyst: 70.00
+  alexandrite: 30.00
+87:
+  amethyst: 33.33
+  alexandrite: 22.50
+  titanium_ore: 18.33
+  obsidian: 10.00
+  uranium: 8.33
+  platinum: 3.00
+  diamond: 2.50
+  sapphire: 2.00
+88:
+  amethyst: 30.00
+  alexandrite: 20.25
+  titanium_ore: 17.50
+  obsidian: 15.00
+  uranium: 7.50
+  diamond: 3.75
+  sapphire: 3.00
+  platinum: 3.00
+89:
+  amethyst: 26.67
+  obsidian: 20.00
+  alexandrite: 18.00
+  titanium_ore: 16.67
+  uranium: 6.67
+  diamond: 5.00
+  sapphire: 4.00
+  platinum: 3.00
+90:
+  obsidian: 25.00
+  amethyst: 23.33
+  titanium_ore: 15.83
+  alexandrite: 15.75
+  diamond: 6.25
+  uranium: 5.83
+  sapphire: 5.00
+  platinum: 3.00
+91:
+  obsidian: 30.00
+  amethyst: 20.00
+  titanium_ore: 15.00
+  alexandrite: 13.50
+  diamond: 7.50
+  sapphire: 6.00
+  uranium: 5.00
+  platinum: 3.00
+92:
+  obsidian: 35.00
+  amethyst: 16.67
+  titanium_ore: 14.17
+  alexandrite: 11.25
+  diamond: 8.75
+  sapphire: 7.00
+  uranium: 4.17
+  platinum: 3.00
+93:
+  obsidian: 40.00
+  titanium_ore: 13.33
+  amethyst: 13.33
+  diamond: 10.00
+  alexandrite: 9.00
+  sapphire: 8.00
+  uranium: 3.33
+  platinum: 3.00
+94:
+  obsidian: 45.00
+  titanium_ore: 12.50
+  diamond: 11.25
+  amethyst: 10.00
+  sapphire: 9.00
+  alexandrite: 6.75
+  platinum: 3.00
+  uranium: 2.50
+95:
+  obsidian: 50.00
+  diamond: 12.50
+  titanium_ore: 11.67
+  sapphire: 10.00
+  amethyst: 6.67
+  alexandrite: 4.50
+  platinum: 3.00
+  uranium: 1.67
+96:
+  obsidian: 55.00
+  diamond: 13.75
+  sapphire: 11.00
+  titanium_ore: 10.83
+  amethyst: 3.33
+  platinum: 3.00
+  alexandrite: 2.25
+  uranium: 0.83
+97:
+  obsidian: 100.00
+98:
+  obsidian: 70.00
+  diamond: 30.00
+99:
+  obsidian: 50.00
+  diamond: 12.50
+  iron: 11.00
+  sapphire: 10.00
+  titanium_ore: 8.33
+  coal: 3.33
+  platinum: 2.50
+  silver: 2.00
+  helium_3: 0.33
+100:
+  obsidian: 45.00
+  iron: 16.50
+  diamond: 11.25
+  sapphire: 9.00
+  titanium_ore: 7.50
+  coal: 5.00
+  silver: 3.00
+  platinum: 2.25
+  helium_3: 0.50
+101:
+  obsidian: 40.00
+  iron: 22.00
+  diamond: 10.00
+  sapphire: 8.00
+  titanium_ore: 6.67
+  coal: 6.67
+  silver: 4.00
+  platinum: 2.00
+  helium_3: 0.67
+102:
+  obsidian: 35.00
+  iron: 27.50
+  diamond: 8.75
+  coal: 8.33
+  sapphire: 7.00
+  titanium_ore: 5.83
+  silver: 5.00
+  platinum: 1.75
+  helium_3: 0.83
+103:
+  iron: 33.00
+  obsidian: 30.00
+  coal: 10.00
+  diamond: 7.50
+  silver: 6.00
+  sapphire: 6.00
+  titanium_ore: 5.00
+  platinum: 1.50
+  helium_3: 1.00
+104:
+  iron: 38.50
+  obsidian: 25.00
+  coal: 11.67
+  silver: 7.00
+  diamond: 6.25
+  sapphire: 5.00
+  titanium_ore: 4.17
+  platinum: 1.25
+  helium_3: 1.17
+105:
+  iron: 44.00
+  obsidian: 20.00
+  coal: 13.33
+  silver: 8.00
+  diamond: 5.00
+  sapphire: 4.00
+  titanium_ore: 3.33
+  helium_3: 1.33
+  platinum: 1.00
+106:
+  iron: 49.50
+  obsidian: 15.00
+  coal: 15.00
+  silver: 9.00
+  diamond: 3.75
+  sapphire: 3.00
+  titanium_ore: 2.50
+  helium_3: 1.50
+  platinum: 0.75
+107:
+  iron: 55.00
+  coal: 16.67
+  silver: 10.00
+  obsidian: 10.00
+  diamond: 2.50
+  sapphire: 2.00
+  titanium_ore: 1.67
+  helium_3: 1.67
+  platinum: 0.50
+108:
+  iron: 60.50
+  coal: 18.33
+  silver: 11.00
+  obsidian: 5.00
+  helium_3: 1.83
+  diamond: 1.25
+  sapphire: 1.00
+  titanium_ore: 0.83
+  platinum: 0.25
+109:
+  iron: 66.00
+  coal: 20.00
+  silver: 12.00
+  helium_3: 2.00
+110:
+  iron: 66.33
+  coal: 18.33
+  silver: 11.00
+  helium_3: 4.33
+111:
+  iron: 66.67
+  coal: 16.67
+  silver: 10.00
+  helium_3: 6.67
+112:
+  iron: 67.00
+  coal: 15.00
+  silver: 9.00
+  helium_3: 9.00
+113:
+  iron: 67.33
+  coal: 13.33
+  helium_3: 11.33
+  silver: 8.00
+114:
+  iron: 67.67
+  helium_3: 13.67
+  coal: 11.67
+  silver: 7.00
+115:
+  iron: 68.00
+  helium_3: 16.00
+  coal: 10.00
+  silver: 6.00
+116:
+  iron: 68.33
+  helium_3: 18.33
+  coal: 8.33
+  silver: 5.00
+117:
+  iron: 68.67
+  helium_3: 20.67
+  coal: 6.67
+  silver: 4.00
+118:
+  iron: 69.00
+  helium_3: 23.00
+  coal: 5.00
+  silver: 3.00
+119:
+  iron: 100.00
+120:
+  iron: 50.00
+  coal: 50.00

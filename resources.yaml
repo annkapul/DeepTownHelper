@@ -1,0 +1,197 @@
+############### SMELTING #################################
+copper_bar:
+  name: "Copper Bar"
+  smelting:
+    in:
+      copper: 5
+    out: 1
+    time_sec: 10
+iron_bar:
+  smelting:
+    in:
+      iron: 5
+    out: 1
+    time_sec: 15
+gold_bar:
+  smelting:
+    in:
+      gold: 5
+    out: 1
+    time_sec: 60
+steel_bar:
+  smelting:
+    in:
+      graphite: 1
+      iron_bar: 1
+    out: 1
+    time_sec: 45
+steel_plate:
+  smelting:
+    in:
+      steel_bar: 5
+    out: 1
+    time_sec: 120
+glass:
+  smelting:
+    in:
+      silicon: 2
+    out: 1
+    time_sec: 60
+#coal:
+#  smelting:
+#    in:
+#      tree: 1
+#    out: 50
+#    time_sec: 60
+titanium_bar:
+  smelting:
+    in:
+      titanium_ore: 5
+    out: 1
+    time_sec: 60
+aluminium_bar:
+  smelting:
+    in:
+      aluminium: 5
+    out: 1
+    time_sec: 15
+
+############ CHEMISTRY ####################################
+sulfuric_acid:
+  chemistry:
+    in:
+      sulfur: 2
+      clean_water: 1
+    out: 1
+    time_sec: 1800
+
+clean_water:
+  chemistry:
+    in:
+      lab_flask: 1
+      water: 1
+    out: 1
+    time_sec: 600
+
+gunpowder:
+  chemistry:
+    in:
+      diethyl_ether: 1
+      sulfuric_acid: 2
+      tree: 2
+    out: 20
+    time_sec: 120
+
+hydrogen:
+  chemistry:
+    in:
+      clean_water: 1
+    out: 2
+    time_sec: 900
+
+diethyl_ether:
+  chemistry:
+    in:
+      sulfuric_acid: 1
+      ethanol: 1
+    out: 1
+    time_sec: 60
+
+ethanol:
+  chemistry:
+    in:
+      aluminium_bottle: 1
+      grape: 1
+    out: 1
+    time_sec: 1800
+
+refined_oil:
+  name: "Refined Oil"
+  chemistry:
+    in:
+      oil: 10
+      hydrogen: 10
+      lab_flask: 1
+    out: 1
+    time_sec: 1800
+
+rubber:
+  chemistry:
+    in:
+      liana: 1
+    out: 2
+    time_sec: 1800
+
+enchanced_helium:
+  chemistry:
+    in:
+      aluminium_bottle: 1
+      helium_3: 100
+      compressor: 1
+    out: 1
+    time_sec: 1800
+
+############# Crafting ########################################
+graphite:
+  crafting:
+    in:
+      coal: 5
+    out: 1
+    time_sec: 5
+
+aluminium_bottle:
+  crafting:
+    in:
+      aluminium_bar: 1
+    out: 1
+    time_sec: 30
+
+lab_flask:
+  crafting:
+    in:
+      glass: 1
+    out: 1
+    time_sec: 60
+
+insulated_wire:
+  crafting:
+    in:
+      wire: 1
+      amber_insulation: 1
+    out: 1
+    time_sec: 80
+
+diamond_cutter:
+  crafting:
+    in:
+      steel_plate: 1
+      polished_diamond: 5
+    out: 1
+    time_sec: 30
+
+compressor:
+  crafting:
+    in:
+      iron_bar: 5
+      rubber: 1
+      refined_oil: 2
+    out: 1
+    time_sec: 180
+
+engine_ir:
+  name: "Engine IR"
+  crafting:
+    in:
+      rubber: 25
+      diamond_cutter: 310
+      aluminium_bar: 3120
+    out: 1
+    time_sec: 3600
+
+############### Jewelling #######################
+polished_diamond:
+  jewelling:
+    in:
+      diamond: 5
+    out: 1
+    time_sec: 60

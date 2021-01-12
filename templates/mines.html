@@ -1,0 +1,63 @@
+<html>
+<head>
+    <title>Item Details</title>
+    <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
+</head>
+<body>
+    <div class="menu">
+        <form method="post" action="reload_resources">
+            <input type="submit" value="Reload Res"/>
+        </form>
+        <form method="get" action="items">
+            <input type="submit" value="I want Crafting"/>
+        </form>
+        <form method="get" action="mines">
+            <input type="submit" value="I want Mining"/>
+        </form>
+    </div>
+
+        <table>
+        {% for mine_area, mine_elements in mines.items() %}
+        <tr>
+            <td><b>{{ mine_area }}</b></td>
+            {% for elem, value in mine_elements.items() %}
+            <td>{{ elem }} <br>{{ value }}</td>
+
+            {% endfor %}
+            <td></td>
+        </tr>
+        {% endfor %}
+        </table>
+    <div class="in">
+        <form method="post" action="mines">
+            <select name="item">
+                I want to find:
+                {% for element in elements %}
+                <option name="{{ element }}"
+                {%- if  element == last_selected_item -%} selected {% endif %}
+                >{{ element }}</option>>
+                {% endfor %}
+            </select>
+            <br>
+            <label>
+                Count of mines
+            <input type="number" name="mines_count" value="{{ last_mines_count }}" min=1 max=50></label>
+            <br>
+            <label>
+                Mines level
+            <input type="number" name="mines_level" value="{{ last_mines_level }}" min=1 max=9></label>
+            <br>
+            <label>
+                Mining time (minutes)
+            <input type="number" name="time_minutes" value="{{ last_time_minutes }}">  </label>
+            <br>
+            <input type="submit" value="Check">
+        </form>
+    </div>
+    {% if result %}
+    <div class="out">
+        {{ result }}
+    </div>
+    {% endif%}
+</body>
+</html>
