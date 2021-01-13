@@ -18,6 +18,19 @@ def all_resources():
 resources = all_resources()
 
 
+def recipes_by_operation():
+    recipes_by_op = {}
+    for recipe_key, recipe_data in resources.items():
+        for key, value in recipe_data.items():
+            if key not in ['melting', 'crafting', 'planting',
+                           'chemistry', 'jewelling']:
+                continue
+            if recipes_by_op.get(key) is None:
+                recipes_by_op[key] = dict()
+            recipes_by_op[key][recipe_key] = recipe_data["name"]
+    return recipes_by_op
+
+
 class BUILDING(enum.Enum):
     Melting = 0
     Chemistry = 1
@@ -58,6 +71,42 @@ def sum_list_of_items(items: ItemVector) -> ItemVector:
             count_by_items[item.name] += item.count
     return [Item(name, count) for name, count in count_by_items.items()]
 
+class Speed:
+    def __init__(self, quantity: int = None,
+                 time: (datetime.timedelta, int) = None,
+                 speed_rpm: int = None):
+        defined_vars = [i for i in [quantity, time, speed_rpm] if i is not None]
+        if defined_vars.__len__() <2:
+            raise BaseException(
+                f"Need at least 2 parameters to initilize Speed(). "
+                f"We got {[quantity, time, speed_rpm]=}")
+        self._quantity = quantity
+        if isinstance(time, int):
+            self._time = datetime.timedelta(minutes=time)
+        else:
+            self._time = time
+        self._speed = speed_rpm
+
+    @property
+    def quantity(self):
+        if self._quantity: return self._quantity
+        return ceil(self._speed * ((self._time.seconds // 60) % 60))
+    
+    @property
+    def time(self):
+        if self._time: return self._time
+        return datetime.timedelta(minutes=int(self._quantity / self._speed))
+
+    @property
+    def speed(self):
+        if self._speed: return self._speed
+        return int(self._quantity / ((self._time.seconds // 60) % 60))
+
+    def __repr__(self):
+        return f"{self.quantity} for {self.time} with {self.speed} RPM"
+
+    def __mul__(self, mul: float):
+        return Speed(quantity=self.quantity, speed_rpm=int(self.speed * mul))
 
 class Recipe:
     def __init__(self, key, building=None):
@@ -71,7 +120,8 @@ class Recipe:
             buildings = [ i for i in list(context.keys()) if i not in ["name"]]
             # print(f"{buildings=}")
             if len(buildings) > 1:
-                raise BaseException(f"Define building for Recipe instance. There is more than 1 building found: "
+                raise BaseException(f"Define building for Recipe instance. "
+                                    f"There is more than 1 building found: "
                                     f"{buildings}")
             if len(buildings) == 1: building = buildings[0]
             recipe = context.get(building)
@@ -163,6 +213,8 @@ def calc(resource_name, count, producers_count=1, speed_modifiers=None):
 
 # Resource()
 # smelting = Building("smelting", total_count=8)
+class CraftBooster:
+    pass
 
 
 if __name__ == "__main__":
@@ -177,6 +229,13 @@ if __name__ == "__main__":
     # print(Recipe("gold_bar").produce(1500, recursive=True))
     # print(Recipe("titanium_bar").produce(210-81, recursive=True))
 
-
     # print(Recipe("gunpowder").produce(50, recursive=True))
     print(Recipe("hydrogen").produce(2))
+
+    print(Speed(quantity=1200, time=10))
+
+    print(Speed(speed_rpm=120, time=10))
+    print(Speed(speed_rpm=120, quantity=1200))
+    print(Speed(speed_rpm=120, quantity=1200) * 1.5)
+
+    print(recipes_by_operation())

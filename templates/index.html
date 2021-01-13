@@ -19,11 +19,14 @@
         <div class="in" >
             <form method="post" action="items">
                 <select name="res">
-              {% for res_key, res in all_resources.items() %}
-                  <option value="{{ res_key }}"
-                {%- if  res_key == last_selected_item -%} selected {% endif %}
-                  >{{ res.name }}</option>
-              {% endfor %}
+                    {% for operation, recipe in recipes_for_dropdown.items() %}
+                        <option disabled> == {{ operation }} == </option>
+                        {% for recipe_key, recipe_name in recipe.items() %}
+                            <option value="{{ recipe_key }}"
+                            {%- if  recipe_key == last_selected_item -%} selected {% endif %}
+                            >{{ recipe_name }}</option>
+                        {% endfor %}
+                    {% endfor %}
                 </select>
                 <input type="text" name="count" value="{{ last_selected_count }}"/>
                 <input type="checkbox" name="recursive"

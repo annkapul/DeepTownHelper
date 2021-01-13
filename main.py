@@ -14,6 +14,7 @@ templates = Jinja2Templates(directory="templates")
 
 
 class PageModel(BaseModel):
+    recipes_for_dropdown: dict
     all_resources: dict
     last_selected_item: str
     last_selected_count: int
@@ -30,6 +31,7 @@ class MinePageModel(BaseModel):
 
 
 saved_resource_page = PageModel(
+    recipes_for_dropdown=calculator.recipes_by_operation(),
     all_resources=calculator.all_resources(),
     last_selected_recursive=False,
     last_selected_item="copper",
@@ -41,7 +43,7 @@ saved_mines_page = MinePageModel(
     last_selected_item='coal',
     last_mines_count=1,
     last_mines_level=1,
-    last_time_minutes=1000
+    last_time_minutes=1440
     )
 
 
@@ -88,6 +90,7 @@ async def reload_resources(request: Request):
     print(list(dictdiffer.diff(updated_res, saved_resource_page.all_resources)))
 
     saved_resource_page.all_resources = calculator.all_resources()
+    saved_resource_page.recipes_for_dropdown = calculator.recipes_by_operation()
     context = {"request": request, **saved_resource_page.dict()}
     return templates.TemplateResponse("index.html", context=context)
 

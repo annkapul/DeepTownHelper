@@ -9,11 +9,8 @@ from calculator import Item
 mine_count = 0
 modifier = None
 
-
 def all_mines():
-    mines = yaml.load(open("mines.yaml"), Loader=yaml.SafeLoader)
-    # print(mines)
-    return mines
+    return yaml.load(open("mines.yaml"), Loader=yaml.SafeLoader)
 
 
 mines = all_mines()
@@ -60,29 +57,29 @@ class Mine:
 def find_best_mines(item: Item,
                     mines_count: int = 1,
                     mines_level: int = 1,
-                    time_minutes: int = 1000):
-    d = { area: Mine(area=area, level=mines_level).produce_by_time(time_minutes)
-            for area, elements in mines.items()
-            if item.name in elements.keys()
-        }
+                    time_minutes: int = 1440):
+    d = {area: Mine(area=area, level=mines_level).produce_by_time(time_minutes)
+         for area, elements in mines.items()
+         if item.name in elements.keys()
+         }
     filtered_by_item = {
         area: a_item.count
-         for area, products in d.items()
-         for a_item in products
-         if a_item.name == item.name
+        for area, products in d.items()
+        for a_item in products
+        if a_item.name == item.name
         }
     sorted_by_count = {str(k): v
-           for k, v
-           in sorted(filtered_by_item.items(), key=lambda item: item[1], reverse=True)
-           }
+                       for k, v
+                       in sorted(filtered_by_item.items(), key=lambda item: item[1], reverse=True)
+                       }
     # print(sorted_by_count)
     top_mines = dict(islice(sorted_by_count.items(), mines_count))
     # print(top_mines)
     return(f"Best areas for mining: {', '.join(list(top_mines.keys()))}. "
-          f"You will collect {sum(top_mines.values())} "
-          f"in {datetime.timedelta(minutes=time_minutes)} "
-          f"by {mines_count} mines with {mines_level} lvl"
-        )
+           f"You will collect {sum(top_mines.values())} "
+           f"in {datetime.timedelta(minutes=time_minutes)} "
+           f"by {mines_count} mines with {mines_level} lvl"
+           )
 
 
 if __name__ == "__main__":
