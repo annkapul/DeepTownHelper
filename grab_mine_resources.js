@@ -1,4 +1,7 @@
+// Grab resources and probability from  https://deeptownguide.com/Areas/Resources
+// using DevConsole
 var dict = {};
+
 for (x in rows) {
 //    if (x>5) { break;}
     var row = rows[x];
