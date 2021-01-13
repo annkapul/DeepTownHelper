@@ -12,27 +12,28 @@ def all_resources():
     resources = yaml.load(open("resources.yaml"), Loader=yaml.SafeLoader)
     for item_key, item_data in resources.items():
         item_data['name'] = item_data.get('name') or item_key.replace("_", " ").title()
-    return resources
+    sorted_dict = {key: resources[key] for key in sorted(resources.keys())}
+    return sorted_dict
 
 
 resources = all_resources()
 
 
-def recipes_by_operation():
+def recipes_by_operation() -> dict:
     recipes_by_op = {}
     for recipe_key, recipe_data in resources.items():
         for key, value in recipe_data.items():
-            if key not in ['melting', 'crafting', 'planting',
-                           'chemistry', 'jewelling']:
+            operation = key.title()
+            if operation not in [building.name for building in BUILDING] :
                 continue
-            if recipes_by_op.get(key) is None:
-                recipes_by_op[key] = dict()
-            recipes_by_op[key][recipe_key] = recipe_data["name"]
+            if recipes_by_op.get(operation) is None:
+                recipes_by_op[operation] = dict()
+            recipes_by_op[operation][recipe_key] = recipe_data["name"]
     return recipes_by_op
 
 
 class BUILDING(enum.Enum):
-    Melting = 0
+    Smelting = 0
     Chemistry = 1
     Crafting = 2
     Planting = 3
