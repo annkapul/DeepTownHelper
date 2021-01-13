@@ -153,6 +153,22 @@ lab_flask:
     out: 1
     time_sec: 60
 
+copper_nail:
+  crafting:
+    in:
+      copper_bar: 1
+    out: 10
+    time_sec: 20
+
+circuits:
+  crafting:
+    in:
+      copper_bar: 20
+      graphite: 50
+      iron_bar: 10
+    out: 1
+    time_sec: 180
+
 insulated_wire:
   crafting:
     in:
@@ -160,6 +176,23 @@ insulated_wire:
       amber_insulation: 1
     out: 1
     time_sec: 80
+
+accumulator:
+  crafting:
+    in:
+      sodium: 20
+      sulfur: 20
+    out: 1
+    time_sec: 180
+
+solar_panel:
+  crafting:
+    in:
+      glass: 50
+      silicon: 10
+      rubber: 1
+    out: 1
+    time_sec: 60
 
 diamond_cutter:
   crafting:
@@ -178,6 +211,14 @@ compressor:
     out: 1
     time_sec: 180
 
+gear:
+  crafting:
+    in:
+      diamond_cutter: 1
+      titanium_bar: 1
+    out: 1
+    time_sec: 80
+
 engine_ir:
   name: "Engine IR"
   crafting:
@@ -187,6 +228,25 @@ engine_ir:
       aluminium_bar: 3120
     out: 1
     time_sec: 3600
+
+stage_i_winglet:
+  crafting:
+    in:
+      gear: 100
+      aluminium_bar: 8888
+      steel_plate: 1111
+    out: 1
+    time_sec: 3600
+
+stage_ii_winglet:
+  crafting:
+    in:
+      gear: 85
+      aluminium_bar: 6250
+      steel_plate: 777
+    out: 1
+    time_sec: 3600
+
 
 ############### Jewelling #######################
 polished_diamond:

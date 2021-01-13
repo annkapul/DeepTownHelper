@@ -4,27 +4,39 @@ h1 {
 
 div.in {
     background-color: #74a7a745;
-    margin: 20;
-    padding: 20;
+    margin: 10;
+    padding: 10;
     width: 30%
     position: relative;
     float: left;
+    grid-column: 2
+    grid-row: 1
 }
 
 div.out {
     background-color: #9174a745;
-    margin: 20;
-    padding: 20;
-    width: 30%;
+    margin: 10;
+    padding: 10;
     position: relative;
     float: right;
+    grid-column: 3, 4
+    grid-row: 2, 4
 }
+
+div.total {
+    background-color: #91a745;
+    margin: 10;
+    padding: 10;
+    position: relative;
+    float: left;
+    font-size: 14px
+}
+
 div.recipe {
     background-color: #80808026;
     border-color: #3871a2;
     border-width: thin;
     border-style: solid;
-    grid-column: 2
 
 }
 

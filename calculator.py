@@ -1,6 +1,7 @@
 import yaml
 import datetime
 import enum
+import uuid
 from typing import  NewType, Sequence
 from math import ceil
 
@@ -20,6 +21,7 @@ resources = all_resources()
 
 
 def recipes_by_operation() -> dict:
+    resources = all_resources()
     recipes_by_op = {}
     for recipe_key, recipe_data in resources.items():
         for key, value in recipe_data.items():
@@ -46,8 +48,17 @@ class Building:
 
 class Item:
     def __init__(self, name, count=1):
+        self.exists = bool(resources.get(name))
         self.name = name
         self.count = count
+        self.uuid = str(uuid.uuid4())
+
+    def is_simple(self):
+        """
+        Doesn't require ingredients
+        :return: bool
+        """
+        return not self.exists
 
     def __repr__(self):
         if self.count > int(self.count):
@@ -72,14 +83,15 @@ def sum_list_of_items(items: ItemVector) -> ItemVector:
             count_by_items[item.name] += item.count
     return [Item(name, count) for name, count in count_by_items.items()]
 
+
 class Speed:
     def __init__(self, quantity: int = None,
                  time: (datetime.timedelta, int) = None,
                  speed_rpm: int = None):
         defined_vars = [i for i in [quantity, time, speed_rpm] if i is not None]
-        if defined_vars.__len__() <2:
+        if defined_vars.__len__() < 2:
             raise BaseException(
-                f"Need at least 2 parameters to initilize Speed(). "
+                f"Need at least 2 parameters to initialize Speed(). "
                 f"We got {[quantity, time, speed_rpm]=}")
         self._quantity = quantity
         if isinstance(time, int):
@@ -115,21 +127,23 @@ class Recipe:
         self.exists = context
         self.key = key
         self.name = key
-        if self.exists:
-            self.name = context.get("name") or key
+        if not self.exists:
+            raise BaseException(f"Can't create Recipe {key=}. It doesn't exist")
+        self.name = context.get("name") or key
 
-            buildings = [ i for i in list(context.keys()) if i not in ["name"]]
-            # print(f"{buildings=}")
-            if len(buildings) > 1:
-                raise BaseException(f"Define building for Recipe instance. "
-                                    f"There is more than 1 building found: "
-                                    f"{buildings}")
-            if len(buildings) == 1: building = buildings[0]
-            recipe = context.get(building)
-            self.producer = building
-            self.count_x1 = recipe["out"]
-            self.ingredients_x1 = [Item(ingr_name, ingr_count) for ingr_name, ingr_count in recipe.get("in").items()]
-            self.time_x1 = recipe['time_sec']
+        buildings = [ i for i in list(context.keys()) if i not in ["name"]]
+        # print(f"{buildings=}")
+        if len(buildings) > 1:
+            raise BaseException(f"Define building for Recipe instance. "
+                                f"There is more than 1 building found: "
+                                f"{buildings}")
+        if len(buildings) == 1: building = buildings[0]
+        recipe = context.get(building)
+        self.producer = building
+        self.count_x1 = recipe["out"]
+        self.ingredients_x1 = [Item(ingr_name, ingr_count) for ingr_name, ingr_count in recipe.get("in").items()]
+        self.time_x1 = recipe['time_sec']
+        self.uuid = str(uuid.uuid4())
 
     def ingredients(self, count=1):
         times = ceil(count / self.count_x1)
@@ -190,8 +204,7 @@ class Recipe:
         result = {"in": Item(self.name, count),
                   "out": sum_list_of_items(total_ingredients),
                   "time": total_time,
-                  "produce_speed": None,
-                  "consume_speed": None
+                  "uuid": self.uuid
                   }
         # print(f"RETURN {self.name}  {result}")
         return result
@@ -211,11 +224,6 @@ def calc(resource_name, count, producers_count=1, speed_modifiers=None):
         print(f"Creating {resource_name} x {count} requires "
               f"{input_resources} "
               f"and {time} (hh:mm:ss) by {operation_name} x {producers_count}")
-
-# Resource()
-# smelting = Building("smelting", total_count=8)
-class CraftBooster:
-    pass
 
 
 if __name__ == "__main__":

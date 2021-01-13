@@ -14,12 +14,13 @@ app.mount("/images", StaticFiles(directory="images"), name="images")
 templates = Jinja2Templates(directory="templates")
 
 
-class PageModel(BaseModel):
+class RecipePageModel(BaseModel):
     recipes_for_dropdown: dict
     all_resources: dict
     last_selected_item: str
     last_selected_count: int
     last_selected_recursive: bool
+    opened_recipes: dict
 
 
 class MinePageModel(BaseModel):
@@ -31,12 +32,13 @@ class MinePageModel(BaseModel):
     last_time_minutes: int
 
 
-saved_resource_page = PageModel(
+saved_resource_page = RecipePageModel(
     recipes_for_dropdown=calculator.recipes_by_operation(),
     all_resources=calculator.all_resources(),
     last_selected_recursive=False,
     last_selected_item="copper",
-    last_selected_count=1)
+    last_selected_count=1,
+    opened_recipes=dict())
 
 saved_mines_page = MinePageModel(
     elements=mine_calculator.elements,
@@ -78,11 +80,42 @@ async def calc_items(request: Request):
     saved_resource_page.last_selected_recursive = recursive
 
     result = calculator.Recipe(name).produce(count, recursive=recursive)
+    print(f"{result=}")
 
+    saved_resource_page.opened_recipes = dict()
+    saved_resource_page.opened_recipes["0"] = result
     # print(saved_resource_page.dict())
-    context = {"request": request, "result": result, **saved_resource_page.dict()}
+    context = {"request": request,
+               "result": result,
+               **saved_resource_page.dict()}
     return templates.TemplateResponse("index.html", context=context)
-    # return {"username": username, "id": id}
+
+
+@app.post("/add_product", response_class=HTMLResponse)
+async def add_product_from_button(request: Request):
+    form_data = await request.form()
+
+    count = int(form_data.get("count"))
+    name = form_data.get("name").strip()
+    uuid = form_data.get("uuid").strip()
+
+    result = calculator.Recipe(name).produce(count)
+    saved_resource_page.opened_recipes[uuid] = result
+
+    ids_opened_frames = list(saved_resource_page.opened_recipes.keys())
+    print(f"{ids_opened_frames=}")
+
+    total = [ingr
+             for uuid, recipe in saved_resource_page.opened_recipes.items()
+             for ingr in recipe["out"]
+             if ingr.uuid not in ids_opened_frames]
+    total = calculator.sum_list_of_items(total)
+
+    context = {"request": request,
+               "result": result,
+               "total": total,
+               **saved_resource_page.dict()}
+    return templates.TemplateResponse("index.html", context=context)
 
 
 @app.post("/reload_resources", response_class=HTMLResponse)
@@ -90,7 +123,7 @@ async def reload_resources(request: Request):
     updated_res = calculator.all_resources()
     print(list(dictdiffer.diff(updated_res, saved_resource_page.all_resources)))
 
-    saved_resource_page.all_resources = calculator.all_resources()
+    saved_resource_page.all_resources = updated_res
     saved_resource_page.recipes_for_dropdown = calculator.recipes_by_operation()
     context = {"request": request, **saved_resource_page.dict()}
     return templates.TemplateResponse("index.html", context=context)
