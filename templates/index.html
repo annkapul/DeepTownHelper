@@ -6,7 +6,7 @@
       type="image/png"
       href="{{ url_for('images', path='/favicon.ico') }}">
 </head>
-<body>
+<body class="crafting_page">
     <div class="menu">
         <form method="post" action="reload_resources">
             <input type="submit" value="Reload Res"/>
@@ -19,8 +19,10 @@
         </form>
     </div>
 
-    <div class="in" >
+    <div class="in">
         <!-- Block with recipe output -->
+        <div>
+        <div class="header">Choose recipe and quantity:</div>
         <form method="post" action="items">
             <select name="res">
                 {% for operation, recipe in recipes_for_dropdown.items() %}
@@ -37,8 +39,7 @@
         </form>
         <!-- END Block with initial forms -->
         <!--  Show total resources -->
-    </div>
-
+        </div>
     {% if total %}
         <div class="total">
             <b>All ingredients:</b> <br>
@@ -47,6 +48,9 @@
         {% endfor %}
     </div>
     {% endif %}
+    </div>
+
+
     <!--  Block with recipes and subrecipes -->
     {% macro insert_recipe(operation) %}
         {% for uuid, recipe in opened_recipes.items() %}
@@ -82,19 +86,21 @@
         {% endfor %}
     {% endmacro %}
     {% if opened_recipes.keys() | length %}
-        <div class="out smelting_container">Smelting<br>
+    <div class="out smelting"><div class="header">Smelting</div>
             {{ insert_recipe("smelting") }}
         </div>
-        <div class="out crafting_container">Crafting<br>
+    <div class="out crafting"><div class="header">Crafting</div>
             {{ insert_recipe("crafting") }}
         </div>
-        <div class="out chemistry_container">Chemistry<br>
+    <div class="out chemistry"><div class="header">Chemistry</div>
             {{ insert_recipe("chemistry") }}
         </div>
-        <div class="out jewelling_container">Jewelling<br>
+    <div class="out jewelling"><div class="header">Jewelling</div>
             {{ insert_recipe("jewelling") }}
         </div>
-        <div class="out header">Planting</div>
+        <div class="out planting"><div class="header">Planting</div>
+            {{ insert_recipe("planting") }}
+        </div>
 
         <!-- Find all opened frames with recipes -->
     {% endif %}

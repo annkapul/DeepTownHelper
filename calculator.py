@@ -21,6 +21,7 @@ resources = all_resources()
 
 
 def recipes_by_operation() -> dict:
+    global resources
     resources = all_resources()
     recipes_by_op = {}
     for recipe_key, recipe_data in resources.items():

@@ -1,24 +1,36 @@
+:root {
+  --main-bg-color: #FCFAFA;
+  --start-bg-color:  #6E8387;
+  --start-border-color: #444554;
+
+  --end-bg-color: #C8D3D5;
+  --end-border-color: #6A868A;
+
+  --font-color: #172121;
+  --contract-color: #683257;
+}
+
 h1 {
     color: green;
 }
 
 div.in {
-    background-color: #837A75;
-    border-color: #605B56;
+    background-color: var(--start-bg-color);
+    border-color: var(--start-border-color);
     border-style: solid;
     border-width: 1px;
     margin: 5;
     padding: 10;
-    width: 30%
-    position: relative;
-    float: left;
+    display: flex;
+    justify-content: space-around;
     grid-area: in;
+    border-radius: 10px;
 
 }
 
 div.out {
-    background-color: #DAFEB7;
-    border-color: #ACC18A;
+    background-color: var(--end-bg-color);
+    border-color: var(--end-border-color);
     border-style: solid;
     border-width: 1px;
     margin: 5;
@@ -28,16 +40,16 @@ div.out {
 }
 
 div.total {
-    background-color: #DAFEB7;
-    border-color: #ACC18A;
+    background-color: var(--end-bg-color);
+    border-color: var(--end-border-color);
     border-style: solid;
     border-width: 1px;
     margin: 5;
     padding: 10;
-    position: relative;
-    float: left;
+    float: right;
     font-size: 14px;
     grid-area: total;
+    border-radius: 10px;
 
 }
 
@@ -64,24 +76,41 @@ input {
 
 }
 
-body {
+body.crafting_page {
     font-family: roboto;
     font-size: 14px;
-    background-color: #EDFFEC;
+    background-color: var(--main-bg-color);
     display: grid;
-    grid-template-columns: 20% 20% 20% 20% 20%;
+    grid-template-columns: 150px 15% 15% 15% 15% 15%;
     grid-auto-flow: row;
     grid-template-areas:
-    'menu in in in total'
-    'smelting crafting chemistry jewelling other';
+    'menu in in in in in'
+    'menu smelting crafting chemistry jewelling planting';
     /*grid-template-rows: auto auto auto auto;*/
     grid-gap: 5px;
 }
+
+body.mining_page {
+    font-family: roboto;
+    font-size: 14px;
+    background-color: var(--main-bg-color);
+    display: grid;
+    grid-template-columns: 150px 15% 15% 15% 15% 15%;
+    grid-auto-flow: row;
+    grid-template-areas:
+    'menu in in'
+    'menu out out '
+    'table table table';
+    /*grid-template-rows: auto auto auto auto;*/
+    grid-gap: 5px;
+}
+
 div.menu {
     background-color: #F2FBE0;
     border-color: #3871a2;
     padding: 20;
     grid-area: menu;
+    border-radius: 10px;
 
 }
 
@@ -92,32 +121,45 @@ table {
     width: fit-content;
     grid-column: 4;
     grid-row: 2;
+    grid-area: table ;
 }
 
 select {
   width: 300px;
+  border-radius:2px;
 }
 
 div.crafting {
  grid-area: crafting;
- display: flex;
+ border-radius: 10px;
 
 }
 div.smelting {
  grid-area: smelting;
-
+ border-radius: 10px;
 }
 
 div.jewelling {
     grid-area: jewelling;
+    border-radius: 10px;
 
 }
 
 div.chemistry  {
     grid-area: chemistry;
+    border-radius: 10px;
+
+}
+div.planting  {
+    grid-area: planting;
+    border-radius: 10px;
 
 }
 
-header {
+div.header {
+ font-size: 18px;
+ font-style: bold;
+ padding: 10px;
+ font-color: var(--font-color);
  height: 20px;
 }

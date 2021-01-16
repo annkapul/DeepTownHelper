@@ -342,3 +342,37 @@ amber_bracelet:
       silver_bar: 1
     out: 1
     time_sec: 120
+
+##################### Planting ##############################
+
+tree:
+  planting:
+    in:
+      tree_seed: 1
+      water: 10
+    out: 10
+    time_sec: 1800
+
+pine_tree:
+  planting:
+    in:
+      pine_seed: 1
+      water: 10
+    out: 1
+    time_sec: 1800
+
+liana:
+  planting:
+    in:
+      liana_seed: 1
+      water: 20
+    out: 1
+    time_sec: 1800
+
+grape:
+  planting:
+    in:
+      grape_seed: 1
+      water: 15
+    out: 2
+    time_sec: 1800
