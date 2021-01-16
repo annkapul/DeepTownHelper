@@ -47,12 +47,21 @@
     </div>
 
     <!--  Block with first result -->
-    {% if result %}
+    {% if opened_recipes.keys() | length %}
 
         <!-- Find all opened frames with recipes -->
         {% for uuid, recipe in opened_recipes.items() %}
             <div class="out">
-            <h3> {{ recipe.in }} </h3>
+                <form method="post" action="del_product">
+                    <input type="text" name="uuid" value="{{ uuid }}" hidden>
+                    <label>
+                        {% if uuid != '0' %}
+                        <input type="submit" value="-" width="8" height="8">
+                        {% endif %}
+                        <b> {{ recipe.in }} </b>
+                    </label>
+                </form>
+
             {% for ingr in recipe.out %}
                 <form method="post" action="add_product">
                     <div>{{ ingr }}

@@ -114,6 +114,29 @@ async def add_product_from_button(request: Request):
     return templates.TemplateResponse("index.html", context=context)
 
 
+@app.post("/del_product", response_class=HTMLResponse)
+async def del_product_from_button(request: Request):
+    form_data = await request.form()
+
+    uuid = form_data.get("uuid").strip()
+
+    saved_resource_page.opened_recipes.__delitem__(uuid)
+
+    ids_opened_frames = list(saved_resource_page.opened_recipes.keys())
+    print(f"{ids_opened_frames=}")
+
+    total = [ingr
+             for uuid, recipe in saved_resource_page.opened_recipes.items()
+             for ingr in recipe["out"]
+             if ingr.uuid not in ids_opened_frames]
+    total = calculator.sum_list_of_items(total)
+
+    context = {"request": request,
+               "total": total,
+               **saved_resource_page.dict()}
+    return templates.TemplateResponse("index.html", context=context)
+
+
 @app.post("/reload_resources", response_class=HTMLResponse)
 async def reload_resources(request: Request):
     updated_res = calculator.all_resources()
