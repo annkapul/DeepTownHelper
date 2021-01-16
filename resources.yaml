@@ -1,3 +1,14 @@
+# Schema how to add new recipe
+
+# <id>:      (without spaces and special symbols)
+#   name: "string"      (optional, name to display)
+#   <operation>:         (mandatory, nmae of production operation crafting|smelting|planting|jewelling|chemistry)
+#     in:
+#          <id of ingredient>: <count of ingredient>
+#          <id of ingredient2>: <count of ingredient2>
+#          ....
+#     out: <count of output>
+#     time_sec: <time>     (needed time for production, in seconds)
 ############### SMELTING #################################
 copper_bar:
   name: "Copper Bar"
@@ -37,12 +48,12 @@ glass:
       silicon: 2
     out: 1
     time_sec: 60
-#coal:
-#  smelting:
-#    in:
-#      tree: 1
-#    out: 50
-#    time_sec: 60
+coal:
+  smelting:
+    in:
+      tree: 1
+    out: 50
+    time_sec: 60
 titanium_bar:
   smelting:
     in:
@@ -94,6 +105,13 @@ hydrogen:
     in:
       clean_water: 1
     out: 2
+    time_sec: 900
+
+oxygen:
+  chemistry:
+    in:
+      clean_water: 1
+    out: 1
     time_sec: 900
 
 diethyl_ether:
@@ -246,6 +264,7 @@ stage_i_winglet:
     time_sec: 3600
 
 stage_ii_winglet:
+  name: "Stage II Winglet"
   crafting:
     in:
       gear: 85
@@ -253,6 +272,36 @@ stage_ii_winglet:
       steel_plate: 777
     out: 1
     time_sec: 3600
+
+nozzle_ii:
+  name: "Nozzle II"
+  crafting:
+    in:
+      titanium_bar: 20
+      aluminium_bar: 6450
+      graphite: 15250
+    out: 1
+    time_sec: 3600
+
+decoupler_ii:
+  name: "Decoupler II"
+  crafting:
+    in:
+      steel_plate: 777
+      rubber: 25
+      copper_nail: 33350
+    out: 1
+    time_sec: 3600
+
+stage_iii:
+  name: "Stage III"
+  crafting:
+    in:
+      diamond_cutter: 225
+      rubber: 45
+      aluminium_bar: 1250
+    out: 1
+    time_sec: 10800
 
 
 ############### Jewelling #######################

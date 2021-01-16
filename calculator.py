@@ -51,6 +51,7 @@ class Item:
     def __init__(self, name, count=1):
         self.exists = bool(resources.get(name))
         self.name = name
+        self.pretty_name = name.replace("_", " ").title()
         self.count = count
         self.uuid = str(uuid.uuid4())
 
@@ -66,7 +67,7 @@ class Item:
             count = int(self.count) + 1
         else:
             count = int(self.count)
-        return f"{self.name} x {count}"
+        return f"{self.pretty_name} x {count}"
 
     def __mul__(self, number: int):
         return Item(self.name, self.count * number)
@@ -134,8 +135,9 @@ class Recipe:
         else:
             self.name = context.get("name") or key
 
-        buildings = [i for i in list(context.keys()) if i not in ["name"]]
-        # print(f"{buildings=}")
+        buildings = [i for i in list(context.keys())
+                     if i in [building.name.lower() for building in BUILDING]]
+        print(f"{buildings=}")
         if len(buildings) > 1:
             raise BaseException(f"Define building for Recipe instance. "
                                 f"There is more than 1 building found: "
