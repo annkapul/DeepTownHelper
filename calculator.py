@@ -51,7 +51,7 @@ class Item:
     def __init__(self, name, count=1):
         self.exists = bool(resources.get(name))
         self.name = name
-        self.pretty_name = name.replace("_", " ").title()
+        self.pretty_name = resources.get(name).get("name") if self.exists else name.replace("_", " ").title()
         self.count = count
         self.uuid = str(uuid.uuid4())
 

@@ -3,33 +3,44 @@ h1 {
 }
 
 div.in {
-    background-color: #74a7a745;
+    background-color: #837A75;
+    border-color: #605B56;
+    border-style: solid;
+    border-width: 1px;
     margin: 5;
     padding: 10;
     width: 30%
     position: relative;
     float: left;
-    grid-column: 2
-    grid-row: 1
+    grid-column: 2;
+    grid-row: 1;
+
 }
 
 div.out {
-    background-color: #9174a745;
+    background-color: #DAFEB7;
+    border-color: #ACC18A;
+    border-style: solid;
+    border-width: 1px;
     margin: 5;
     padding: 10;
     position: relative;
     float: right;
-    grid-column: 3, 4
-    grid-row: 2, 4
+    grid-column: 3, 4;
+    grid-row: 2, 4;
 }
 
 div.total {
-    background-color: #91a745;
+    background-color: #DAFEB7;
+    border-color: #ACC18A;
+    border-style: solid;
+    border-width: 1px;
     margin: 5;
     padding: 10;
     position: relative;
     float: left;
-    font-size: 14px
+    font-size: 14px;
+
 }
 
 div.recipe {
@@ -56,14 +67,15 @@ input {
 }
 
 body {
-    font-family: sans-serif;
+    font-family: roboto;
+    background-color: #EDFFEC;
     display: grid;
     grid-template-columns: 150px auto auto auto auto auto;
     grid-template-rows: auto auto auto auto;
     grid-gap: 5px;
 }
 div.menu {
-    background-color: #80808026;
+    background-color: #F2FBE0;
     border-color: #3871a2;
     grid-column: 1;
     grid-row-start: 1;

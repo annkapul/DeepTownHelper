@@ -1,3 +1,5 @@
+## Deep Town Helper
+
 Web application to help your progressing in the DeepTown game 
 
 1.  Unfold complex item to simple ones
@@ -6,4 +8,6 @@ Web application to help your progressing in the DeepTown game
 
 Tested with Python3.8.5
 
-uvicorn main:app --reload
+### How to start
+Create virtualenv and launch from repo directory
+`uvicorn main:app --reload`
