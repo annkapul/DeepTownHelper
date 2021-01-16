@@ -3,7 +3,7 @@
   --start-bg-color:  #6E8387;
   --start-border-color: #444554;
 
-  --end-bg-color: #C8D3D5;
+  --end-bg-color: #dee4e0;
   --end-border-color: #6A868A;
 
   --font-color: #172121;
@@ -105,14 +105,13 @@ body.mining_page {
     grid-gap: 5px;
 }
 
-label input {
+div.div_input > label  input {
     float: right;
     width: 90px;
 }
 div.div_input {
     padding: 5px;
     margin: 5px;
-
 }
 
 div.menu {

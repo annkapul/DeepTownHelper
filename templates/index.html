@@ -22,32 +22,33 @@
     <div class="in">
         <!-- Block with recipe output -->
         <div>
-        <div class="header">Choose recipe and quantity:</div>
-        <form method="post" action="items">
-            <select name="res">
-                {% for operation, recipe in recipes_for_dropdown.items() %}
-                    <option disabled> ==== {{ operation }} ==== </option>
-                    {% for recipe_key, recipe_name in recipe.items() %}
-                        <option value="{{ recipe_key }}"
-                        {%- if  recipe_key == last_selected_item -%} selected {% endif %}
-                        >{{ recipe_name }}</option>
+            <div class="header">Choose recipe and quantity:</div>
+            <form method="post" action="items">
+                <select name="res">
+                    {% for operation, recipe in recipes_for_dropdown.items() %}
+                        <option disabled> ==== {{ operation }} ==== </option>
+                        {% for recipe_key, recipe_name in recipe.items() %}
+                            <option value="{{ recipe_key }}"
+                            {%- if  recipe_key == last_selected_item -%} selected {% endif %}
+                            >{{ recipe_name }}</option>
+                        {% endfor %}
                     {% endfor %}
-                {% endfor %}
-            </select>
-            <input type="number" name="count" value="{{ last_selected_count }}"/>
-            <input type="submit"/>
-        </form>
-        <!-- END Block with initial forms -->
-        <!--  Show total resources -->
+                </select>
+                <input type="number" name="count" value="{{ last_selected_count }}"/>
+                <input type="submit"/>
+            </form>
+            <!-- END Block with initial forms -->
+            <!--  Show total resources -->
         </div>
-    {% if total %}
-        <div class="total">
-            <b>All ingredients:</b> <br>
-        {% for ingr in total %}
-            <p>{{ ingr }} </p>
-        {% endfor %}
-    </div>
-    {% endif %}
+
+        {% if total %}
+            <div class="total">
+                <b>All ingredients:</b> <br>
+            {% for ingr in total %}
+                <p>{{ ingr }} </p>
+            {% endfor %}
+            </div>
+        {% endif %}
     </div>
 
 
@@ -62,6 +63,8 @@
                             {% if uuid != '0' %}
                             <input type="submit" value="-" width="8" height="8">
                             {% endif %}
+                            {% set img_url =  '/ui-mat-' ~ (recipe.in.name|lower|replace('_', '-') | replace(' ', '-'))  ~ '.png' %}
+                            <img src="{{ url_for('images', path=img_url) }}" alt="{{ recipe.in }}" width="25">
                             <b> {{ recipe.in }} </b>
                         </label>
                     </form>

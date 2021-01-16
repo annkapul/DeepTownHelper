@@ -17,18 +17,21 @@ copper_bar:
       copper: 5
     out: 1
     time_sec: 10
+
 iron_bar:
   smelting:
     in:
       iron: 5
     out: 1
     time_sec: 15
+
 gold_bar:
   smelting:
     in:
       gold: 5
     out: 1
     time_sec: 60
+
 steel_bar:
   smelting:
     in:
@@ -36,30 +39,35 @@ steel_bar:
       iron_bar: 1
     out: 1
     time_sec: 45
+
 steel_plate:
   smelting:
     in:
       steel_bar: 5
     out: 1
     time_sec: 120
+
 glass:
   smelting:
     in:
       silicon: 2
     out: 1
     time_sec: 60
+
 coal:
   smelting:
     in:
       tree: 1
     out: 50
     time_sec: 60
+
 titanium_bar:
   smelting:
     in:
       titanium_ore: 5
     out: 1
     time_sec: 60
+
 aluminium_bar:
   smelting:
     in:
