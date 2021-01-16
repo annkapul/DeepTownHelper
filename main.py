@@ -29,6 +29,7 @@ class MinePageModel(BaseModel):
     last_mines_count: int
     last_mines_level: int
     last_time_minutes: int
+    last_max_area: int
 
 
 saved_resource_page = RecipePageModel(
@@ -44,7 +45,8 @@ saved_mines_page = MinePageModel(
     last_selected_item='coal',
     last_mines_count=1,
     last_mines_level=1,
-    last_time_minutes=1440
+    last_time_minutes=1440,
+    last_max_area=120
     )
 
 
@@ -167,17 +169,20 @@ async def get_best_mines(request: Request):
     mines_count = int(form_data.get("mines_count"))
     mines_level = int(form_data.get("mines_level"))
     time_minutes = int(form_data.get("time_minutes"))
+    max_area = int(form_data.get("max_area"))
 
     saved_mines_page.last_selected_item = item
     saved_mines_page.last_mines_count = mines_count
     saved_mines_page.last_mines_level = mines_level
     saved_mines_page.last_time_minutes = time_minutes
+    saved_mines_page.last_max_area = max_area
 
     result = mine_calculator.find_best_mines(
             item=calculator.Item(item),
             mines_count=mines_count,
             mines_level=mines_level,
-            time_minutes=time_minutes
+            time_minutes=time_minutes,
+            max_area=max_area
             )
     context = {
         "request": request,

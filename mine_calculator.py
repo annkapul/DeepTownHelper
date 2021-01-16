@@ -57,10 +57,11 @@ class Mine:
 def find_best_mines(item: Item,
                     mines_count: int = 1,
                     mines_level: int = 1,
-                    time_minutes: int = 1440):
+                    time_minutes: int = 1440,
+                    max_area: int = 120):
     d = {area: Mine(area=area, level=mines_level).produce_by_time(time_minutes)
          for area, elements in mines.items()
-         if item.name in elements.keys()
+         if item.name in elements.keys() and area <= max_area
          }
     filtered_by_item = {
         area: a_item.count

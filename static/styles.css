@@ -81,7 +81,7 @@ body.crafting_page {
     font-size: 14px;
     background-color: var(--main-bg-color);
     display: grid;
-    grid-template-columns: 150px 15% 15% 15% 15% 15%;
+    grid-template-columns: 10% 17% 17% 17% 17% 17%;
     grid-auto-flow: row;
     grid-template-areas:
     'menu in in in in in'
@@ -95,14 +95,24 @@ body.mining_page {
     font-size: 14px;
     background-color: var(--main-bg-color);
     display: grid;
-    grid-template-columns: 150px 15% 15% 15% 15% 15%;
+    grid-template-columns: 10% 40% 50%;
     grid-auto-flow: row;
     grid-template-areas:
-    'menu in in'
-    'menu out out '
-    'table table table';
+    'menu in table'
+    'menu out table '
+    '. . table';
     /*grid-template-rows: auto auto auto auto;*/
     grid-gap: 5px;
+}
+
+label input {
+    float: right;
+    width: 90px;
+}
+div.div_input {
+    padding: 5px;
+    margin: 5px;
+
 }
 
 div.menu {
@@ -118,9 +128,6 @@ table {
     border-style: solid;
     border-width: 1;
     font-size: small;
-    width: fit-content;
-    grid-column: 4;
-    grid-row: 2;
     grid-area: table ;
 }
 
