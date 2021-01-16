@@ -208,6 +208,7 @@ class Recipe:
 
         result = {"in": Item(self.name, count),
                   "out": sum_list_of_items(total_ingredients),
+                  "operation": self.producer,
                   "time": total_time,
                   "uuid": self.uuid
                   }

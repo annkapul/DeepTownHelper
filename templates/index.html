@@ -24,7 +24,7 @@
         <form method="post" action="items">
             <select name="res">
                 {% for operation, recipe in recipes_for_dropdown.items() %}
-                    <option disabled> == {{ operation }} == </option>
+                    <option disabled> ==== {{ operation }} ==== </option>
                     {% for recipe_key, recipe_name in recipe.items() %}
                         <option value="{{ recipe_key }}"
                         {%- if  recipe_key == last_selected_item -%} selected {% endif %}
@@ -32,55 +32,71 @@
                     {% endfor %}
                 {% endfor %}
             </select>
-            <input type="text" name="count" value="{{ last_selected_count }}"/>
+            <input type="number" name="count" value="{{ last_selected_count }}"/>
             <input type="submit"/>
         </form>
         <!-- END Block with initial forms -->
         <!--  Show total resources -->
+    </div>
+
     {% if total %}
         <div class="total">
+            <b>All ingredients:</b> <br>
         {% for ingr in total %}
             <p>{{ ingr }} </p>
         {% endfor %}
-        </div>
-    {% endif %}
     </div>
+    {% endif %}
+    <!--  Block with recipes and subrecipes -->
+    {% macro insert_recipe(operation) %}
+        {% for uuid, recipe in opened_recipes.items() %}
+        {% if recipe.operation == operation %}
+        <div class="out">
+                    <form method="post" action="del_product">
+                        <input type="text" name="uuid" value="{{ uuid }}" hidden>
+                        <label>
+                            {% if uuid != '0' %}
+                            <input type="submit" value="-" width="8" height="8">
+                            {% endif %}
+                            <b> {{ recipe.in }} </b>
+                        </label>
+                    </form>
 
-    <!--  Block with first result -->
+                {% for ingr in recipe.out %}
+                    <form method="post" action="add_product">
+                        <div>{{ ingr }}
+                            <input type="text" name="name" value="{{ ingr.name}} " hidden/>
+                            <input type="text" name="count" value="{{ ingr.count }}" hidden/>
+                            <input type="text"  name="uuid" value="{{ ingr.uuid }}" hidden/>
+                            {%  if ingr.exists and ingr.uuid not in opened_recipes.keys() %}
+                                <input type="submit" value="+" width="8" height="8"/>
+                            {% endif %}
+
+                        </div>
+                    </form>
+
+                {% endfor %}
+                <div class="time">Required time: {{ recipe.time }} </div>
+                </div>
+        {% endif %}
+        {% endfor %}
+    {% endmacro %}
     {% if opened_recipes.keys() | length %}
+        <div class="out smelting_container">Smelting<br>
+            {{ insert_recipe("smelting") }}
+        </div>
+        <div class="out crafting_container">Crafting<br>
+            {{ insert_recipe("crafting") }}
+        </div>
+        <div class="out chemistry_container">Chemistry<br>
+            {{ insert_recipe("chemistry") }}
+        </div>
+        <div class="out jewelling_container">Jewelling<br>
+            {{ insert_recipe("jewelling") }}
+        </div>
+        <div class="out header">Planting</div>
 
         <!-- Find all opened frames with recipes -->
-        {% for uuid, recipe in opened_recipes.items() %}
-            <div class="out">
-                <form method="post" action="del_product">
-                    <input type="text" name="uuid" value="{{ uuid }}" hidden>
-                    <label>
-                        {% if uuid != '0' %}
-                        <input type="submit" value="-" width="8" height="8">
-                        {% endif %}
-                        <b> {{ recipe.in }} </b>
-                    </label>
-                </form>
-
-            {% for ingr in recipe.out %}
-                <form method="post" action="add_product">
-                    <div>{{ ingr }}
-                        <input type="text" name="name" value="{{ ingr.name}} " hidden/>
-                        <input type="text" name="count" value="{{ ingr.count }}" hidden/>
-                        <input type="text"  name="uuid" value="{{ ingr.uuid }}" hidden/>
-                        {%  if ingr.exists and ingr.uuid not in opened_recipes.keys() %}
-                            <input type="submit" value="+" width="8" height="8"/>
-                        {% endif %}
-
-                    </div>
-                </form>
-
-            {% endfor %}
-            <div class="time">Required time: {{ recipe.time }} </div>
-            </div>
-        {% endfor %}
-
-
     {% endif %}
     <!-- END Block with recipes -->
 

@@ -2,7 +2,7 @@
 
 # <id>:      (without spaces and special symbols)
 #   name: "string"      (optional, name to display)
-#   <operation>:         (mandatory, nmae of production operation crafting|smelting|planting|jewelling|chemistry)
+#   <operation>:         (mandatory, name of production operation crafting|smelting|planting|jewelling|chemistry)
 #     in:
 #          <id of ingredient>: <count of ingredient>
 #          <id of ingredient2>: <count of ingredient2>
@@ -201,6 +201,22 @@ insulated_wire:
       amber_insulation: 1
     out: 1
     time_sec: 80
+
+wire:
+  crafting:
+    in:
+      copper_bar: 1
+    out: 5
+    time_sec: 30
+
+amber_insulation:
+  crafting:
+    in:
+      aluminium_bottle: 1
+      amber: 10
+    out: 1
+    time_sec: 20
+
 
 accumulator:
   crafting:

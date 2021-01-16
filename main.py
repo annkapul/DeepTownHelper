@@ -80,9 +80,11 @@ async def calc_items(request: Request):
 
     saved_resource_page.opened_recipes = dict()
     saved_resource_page.opened_recipes["0"] = result
+
     # print(saved_resource_page.dict())
     context = {"request": request,
                "result": result,
+               "total": result.get("out"),
                **saved_resource_page.dict()}
     return templates.TemplateResponse("index.html", context=context)
 
