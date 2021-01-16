@@ -19,7 +19,6 @@ class RecipePageModel(BaseModel):
     all_resources: dict
     last_selected_item: str
     last_selected_count: int
-    last_selected_recursive: bool
     opened_recipes: dict
 
 
@@ -35,7 +34,6 @@ class MinePageModel(BaseModel):
 saved_resource_page = RecipePageModel(
     recipes_for_dropdown=calculator.recipes_by_operation(),
     all_resources=calculator.all_resources(),
-    last_selected_recursive=False,
     last_selected_item="copper",
     last_selected_count=1,
     opened_recipes=dict())
@@ -73,13 +71,11 @@ async def calc_items(request: Request):
 
     count = int(form_data.get("count"))
     name = form_data.get("res")
-    recursive = form_data.get("recursive")
 
     saved_resource_page.last_selected_count = count
     saved_resource_page.last_selected_item = name
-    saved_resource_page.last_selected_recursive = recursive
 
-    result = calculator.Recipe(name).produce(count, recursive=recursive)
+    result = calculator.Recipe(name).produce(count)
     print(f"{result=}")
 
     saved_resource_page.opened_recipes = dict()

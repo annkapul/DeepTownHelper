@@ -56,6 +56,13 @@ aluminium_bar:
     out: 1
     time_sec: 15
 
+silver_bar:
+  smelting:
+    in:
+      silver: 5
+    out: 1
+    time_sec: 60
+
 ############ CHEMISTRY ####################################
 sulfuric_acid:
   chemistry:
@@ -255,3 +262,18 @@ polished_diamond:
       diamond: 5
     out: 1
     time_sec: 60
+
+polished_amber:
+  jewelling:
+    in:
+      amber: 5
+    out: 1
+    time_sec: 30
+
+amber_bracelet:
+  jewelling:
+    in:
+      polished_amber: 1
+      silver_bar: 1
+    out: 1
+    time_sec: 120

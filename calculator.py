@@ -26,7 +26,7 @@ def recipes_by_operation() -> dict:
     for recipe_key, recipe_data in resources.items():
         for key, value in recipe_data.items():
             operation = key.title()
-            if operation not in [building.name for building in BUILDING] :
+            if operation not in [building.name for building in BUILDING]:
                 continue
             if recipes_by_op.get(operation) is None:
                 recipes_by_op[operation] = dict()
@@ -39,6 +39,7 @@ class BUILDING(enum.Enum):
     Chemistry = 1
     Crafting = 2
     Planting = 3
+    Jewelling = 4
 
 
 class Building:
@@ -128,10 +129,12 @@ class Recipe:
         self.key = key
         self.name = key
         if not self.exists:
-            raise BaseException(f"Can't create Recipe {key=}. It doesn't exist")
-        self.name = context.get("name") or key
+            pass
+            # raise BaseException(f"Can't create Recipe {key=}. It doesn't exist")
+        else:
+            self.name = context.get("name") or key
 
-        buildings = [ i for i in list(context.keys()) if i not in ["name"]]
+        buildings = [i for i in list(context.keys()) if i not in ["name"]]
         # print(f"{buildings=}")
         if len(buildings) > 1:
             raise BaseException(f"Define building for Recipe instance. "

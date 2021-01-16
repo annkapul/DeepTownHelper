@@ -20,7 +20,7 @@
     </div>
 
     <div class="in" >
-        <!-- Block with initial forms -->
+        <!-- Block with recipe output -->
         <form method="post" action="items">
             <select name="res">
                 {% for operation, recipe in recipes_for_dropdown.items() %}
@@ -33,9 +33,6 @@
                 {% endfor %}
             </select>
             <input type="text" name="count" value="{{ last_selected_count }}"/>
-            <input type="checkbox" name="recursive"
-            {%- if  last_selected_recursive -%} checked {% endif %}
-            > Recursive </input>
             <input type="submit"/>
         </form>
         <!-- END Block with initial forms -->
@@ -62,7 +59,7 @@
                         <input type="text" name="name" value="{{ ingr.name}} " hidden/>
                         <input type="text" name="count" value="{{ ingr.count }}" hidden/>
                         <input type="text"  name="uuid" value="{{ ingr.uuid }}" hidden/>
-                        {%  if ingr.exists %}
+                        {%  if ingr.exists and ingr.uuid not in opened_recipes.keys() %}
                             <input type="submit" value="+" width="8" height="8"/>
                         {% endif %}
 
