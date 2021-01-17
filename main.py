@@ -77,7 +77,7 @@ async def calc_items(request: Request):
     saved_resource_page.last_selected_count = count
     saved_resource_page.last_selected_item = name
 
-    result = calculator.Recipe(name).produce(count)
+    result = calculator.Recipe(name, count).produce
     print(f"{result=}")
 
     saved_resource_page.opened_recipes = dict()
@@ -96,10 +96,10 @@ async def add_product_from_button(request: Request):
     form_data = await request.form()
 
     count = int(form_data.get("count"))
-    name = form_data.get("name").strip()
+    key = form_data.get("key").strip()
     uuid = form_data.get("uuid").strip()
 
-    result = calculator.Recipe(name).produce(count)
+    result = calculator.Recipe(key, count).produce
     saved_resource_page.opened_recipes[uuid] = result
 
     ids_opened_frames = list(saved_resource_page.opened_recipes.keys())
@@ -107,9 +107,9 @@ async def add_product_from_button(request: Request):
 
     total = [ingr
              for uuid, recipe in saved_resource_page.opened_recipes.items()
-             for ingr in recipe["out"]
+             for ingr in recipe["consume"]
              if ingr.uuid not in ids_opened_frames]
-    total = calculator.sum_list_of_items(total)
+    total = calculator.sum_items_by_count( total )
 
     context = {"request": request,
                "result": result,
@@ -129,11 +129,14 @@ async def del_product_from_button(request: Request):
     ids_opened_frames = list(saved_resource_page.opened_recipes.keys())
     print(f"{ids_opened_frames=}")
 
+    import json
+
+    print(f"{saved_resource_page.opened_recipes}")
     total = [ingr
              for uuid, recipe in saved_resource_page.opened_recipes.items()
-             for ingr in recipe["out"]
+             for ingr in recipe["consume"]
              if ingr.uuid not in ids_opened_frames]
-    total = calculator.sum_list_of_items(total)
+    total = calculator.sum_items_by_count( total )
 
     context = {"request": request,
                "total": total,
@@ -177,6 +180,8 @@ async def get_best_mines(request: Request):
     saved_mines_page.last_time_minutes = time_minutes
     saved_mines_page.last_max_area = max_area
 
+    print(f"{item=} {calculator.Item(item)}")
+
     result = mine_calculator.find_best_mines(
             item=calculator.Item(item),
             mines_count=mines_count,
@@ -195,5 +200,10 @@ async def get_best_mines(request: Request):
 @app.post("/add_item")
 async def add_item(item_id: str = Form(...)):
     return {"item_id": item_id}
+
+
+if __name__ == '__main__':
+    import uvicorn
+    uvicorn.run(app, host='0.0.0.0', port=8000)
 
 

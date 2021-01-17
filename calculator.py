@@ -4,6 +4,7 @@ import enum
 import uuid
 from typing import  NewType, Sequence
 from math import ceil
+
 import locale
 locale.setlocale(locale.LC_ALL, '')
 
@@ -51,10 +52,10 @@ class Building:
 
 
 class Item:
-    def __init__(self, name, count=1):
-        self.exists = bool(resources.get(name))
-        self.name = name
-        self.pretty_name = resources.get(name).get("name") if self.exists else name.replace("_", " ").title()
+    def __init__(self, key, count=1):
+        self.exists = bool(resources.get(key))
+        self.key = key
+        self.name = resources.get(key).get("name") if self.exists else key.replace("_", " ").title()
         self.count = count
         self.uuid = str(uuid.uuid4())
 
@@ -70,46 +71,40 @@ class Item:
             count = int(self.count) + 1
         else:
             count = int(self.count)
-        return f"{self.pretty_name} x {count:n}"
+        return f"{self.name} x {count:n}"
 
     def __mul__(self, number: int):
-        return Item(self.name, self.count * number)
+        return Item(self.key, self.count * number)
 
-
-ItemVector = NewType("ItemVector", Sequence[Item])
-
-
-def sum_list_of_items(items: ItemVector) -> ItemVector:
-    count_by_items = dict()
-    for item in items:
-        if count_by_items.get(item.name) is None:
-            count_by_items[item.name] = item.count
-        else:
-            count_by_items[item.name] += item.count
-    return [Item(name, count) for name, count in count_by_items.items()]
+    def rpm(self, time_sec):
+        return Speed(item=self,
+                     time_sec=time_sec)
 
 
 class Speed:
-    def __init__(self, quantity: int = None,
-                 time: (datetime.timedelta, int) = None,
+    def __init__(self,
+                 item: Item,
+                 time_sec: (datetime.timedelta, int) = None,
                  speed_rpm: int = None):
-        defined_vars = [i for i in [quantity, time, speed_rpm] if i is not None]
+        defined_vars = [i for i in [item.count, time_sec, speed_rpm] if i is not None]
         if defined_vars.__len__() < 2:
             raise BaseException(
                 f"Need at least 2 parameters to initialize Speed(). "
-                f"We got {[quantity, time, speed_rpm]=}")
-        self._quantity = quantity
-        if isinstance(time, int):
-            self._time = datetime.timedelta(minutes=time)
+                f"We got {[item.count, time_sec, speed_rpm]=}")
+        self.item = item
+        self._quantity = item.count
+        if isinstance(time_sec, int):
+            self._time = datetime.timedelta(seconds=time_sec)
         else:
-            self._time = time
+            self._time = time_sec
         self._speed = speed_rpm
+        # print(locals())
 
     @property
     def quantity(self):
         if self._quantity: return self._quantity
-        return ceil(self._speed * ((self._time.seconds // 60) % 60))
-    
+        return ceil(self._speed * (self._time.seconds // 60))
+
     @property
     def time(self):
         if self._time: return self._time
@@ -118,16 +113,47 @@ class Speed:
     @property
     def speed(self):
         if self._speed: return self._speed
-        return int(self._quantity / ((self._time.seconds // 60) % 60))
+        speed = self._quantity / (self._time.seconds / 60)
+        return round(speed, 3)
+
+    def __add__(self, other):
+        return Speed(item=self.item, speed_rpm=self.speed + other.speed)
 
     def __repr__(self):
-        return f"{self.quantity} for {self.time} with {self.speed} RPM"
+        return f"{self.item.name} x {self.speed} RPM"
 
     def __mul__(self, mul: float):
-        return Speed(quantity=self.quantity, speed_rpm=int(self.speed * mul))
+        return Speed(item=self.item, speed_rpm=int(self.speed * mul))
+
+
+ItemVector = NewType("ItemVector", Sequence[Item])
+SpeedVector = NewType("SpeedVector", Sequence[Speed])
+
+
+def sum_items_by_count(items: ItemVector) -> ItemVector:
+    count_by_items = dict()
+    for item in items:
+        if count_by_items.get(item.key) is None:
+            count_by_items[item.key] = item.count
+        else:
+            count_by_items[item.key] += item.count
+    return [Item(key, count) for key, count in count_by_items.items()]
+
+
+def sum_items_by_rpm(speeds: SpeedVector) -> SpeedVector:
+    rpm_by_items = dict()
+    for speed_obj in speeds:
+        if rpm_by_items.get(speed_obj.item.key) is None:
+            rpm_by_items[speed_obj.item.key] = speed_obj.speed
+        else:
+            rpm_by_items[speed_obj.item.key] += speed_obj.speed
+    print(f"{rpm_by_items=}")
+    return [Speed(Item(key), speed_rpm=rpm) for key, rpm in rpm_by_items.items()]
+
+
 
 class Recipe:
-    def __init__(self, key, building=None):
+    def __init__(self, key, count=1000):
         context = resources.get(key)
         self.exists = context
         self.key = key
@@ -136,11 +162,11 @@ class Recipe:
             pass
             # raise BaseException(f"Can't create Recipe {key=}. It doesn't exist")
         else:
-            self.name = context.get("name") or key
+            self.name = context.get("name") or key.replace("_", " ").title()
 
         buildings = [i for i in list(context.keys())
                      if i in [building.name.lower() for building in BUILDING]]
-        print(f"{buildings=}")
+        # print(f"{buildings=}")
         if len(buildings) > 1:
             raise BaseException(f"Define building for Recipe instance. "
                                 f"There is more than 1 building found: "
@@ -149,9 +175,10 @@ class Recipe:
         recipe = context.get(building)
         self.producer = building
         self.count_x1 = recipe["out"]
-        self.ingredients_x1 = [Item(ingr_name, ingr_count) for ingr_name, ingr_count in recipe.get("in").items()]
+        self.ingredients_x1 = [Item(ingr_key, ingr_count) for ingr_key, ingr_count in recipe.get("in").items()]
         self.time_x1 = recipe['time_sec']
         self.uuid = str(uuid.uuid4())
+        self.count = count
 
     def ingredients(self, count=1):
         times = ceil(count / self.count_x1)
@@ -174,49 +201,56 @@ class Recipe:
                 return False
         return is_simple
 
-    def produce(self, count, recursive=False):
-        ingredients = self.ingredients(count)
-        time = self.time(count)
+    @property
+    def produce(self):
+        ingredients = self.ingredients(self.count)
+        time = self.time(self.count)
         total_ingredients = list()
         total_time = time
 
-        r = (f"Creating {Item(self.name, count)} requires "
+        r = (f"Creating {Item(self.name, self.count)} requires "
              f"{ingredients}"
              f" and {time} (hh:mm:ss) by ")
-        if recursive:
-            for res in ingredients:
-                sub_recipe = Recipe(res.name)
 
-                if not sub_recipe.exists:
-                    total_ingredients.append(res)
-                    continue
-                if sub_recipe.is_simple():
-                    sub_product = sub_recipe.produce(res.count, recursive=recursive)
-                    # print(f"Add simple item {sub_product.get('out')}")
-                    total_ingredients.extend(sub_product.get('out'))
-                    # print(f"from {self.name} {total_ingredients=}")
-                    continue
-
-                sub_product = sub_recipe.produce(res.count, recursive=recursive)
-                total_ingredients.extend(sub_product.get('out'))
-                r = f"{r} \n " \
-                    f"|| || || \n" \
-                    f" v  v  v \n {sub_recipe.produce(res.count, recursive=recursive)}"
-                total_time += sub_recipe.time(res.count)
         r = f"{r} \t Total time required: {total_time}"
         # print(r)
         if not total_ingredients:
             # print(f"++ from {self.name} {total_ingredients=}")
             total_ingredients = ingredients
 
-        result = {"in": Item(self.name, count),
-                  "out": sum_list_of_items(total_ingredients),
+        result = {"product": Item(self.key, self.count),
+                  "consume": sum_items_by_count(total_ingredients),
                   "operation": self.producer,
                   "time": total_time,
                   "uuid": self.uuid
                   }
         # print(f"RETURN {self.name}  {result}")
         return result
+
+
+class RecipeSpeed():
+    def __init__(self, recipe: Recipe, boosters: dict = None):
+        # print(f"{boosters=}")
+        self.product = recipe.produce
+        self.boosters = None
+        if boosters:
+            self.boosters = boosters.get(self.product['operation'])
+        # print(f"{self.boosters=}")
+
+    @property
+    def all(self):
+        # Define speed of production
+        # Define speed of each consumable
+        # Multiply both values to booster multiplier
+        multiplier = sum(list(self.boosters.values())) if self.boosters else 1
+        speed_production = Speed(self.product['product'], self.product['time']) * multiplier
+        speed_consumings = [ingr.rpm(time_sec=self.product['time'].seconds) * (-1 * multiplier)
+                        for ingr in self.product['consume']]
+        print(f" {speed_consumings=}  {speed_production=}")
+
+        print(f"{multiplier=}")
+        speed_consumings.append(speed_production)
+        return speed_consumings
 
 
 def calc(resource_name, count, producers_count=1, speed_modifiers=None):
@@ -248,12 +282,39 @@ if __name__ == "__main__":
     # print(Recipe("titanium_bar").produce(210-81, recursive=True))
 
     # print(Recipe("gunpowder").produce(50, recursive=True))
-    print(Recipe("hydrogen").produce(2))
+    # print(Recipe("hydrogen").produce(2))
+    #
+    # print(Speed(quantity=1200, time=10))
+    #
+    # print(Item('clean_water', count=10).rpm(time_sec=60))
+    # print(Item('clean_water', count=10).rpm(time_sec=60) * 0.5)
+    # print(Item('clean_water', count=10).rpm(time_sec=60) * 6)
+    # print(Item('clean_water', count=100).rpm(time_sec=1))
+    # print(Item('clean_water', count=-100).rpm(time_sec=1))
+    # print(Item('clean_water', count=-100).rpm(time_sec=1) * 0.5)
 
-    print(Speed(quantity=1200, time=10))
+    # print(Speed(speed_rpm=120, quantity=1200))
+    # print(Speed(speed_rpm=120, quantity=1200) * 1.5)
+    #
+    # print(recipes_by_operation())
 
-    print(Speed(speed_rpm=120, time=10))
-    print(Speed(speed_rpm=120, quantity=1200))
-    print(Speed(speed_rpm=120, quantity=1200) * 1.5)
+    boosters = {
+        "crafting": {
+            "bot": 1.2,
+            "tech_lab": 2,
+            },
+        "smelting": {
+            "bot": 1.2,
+            "tech_lab": 2,
+            "pumpkin": 2
+            }
+        }
+    copper_bar = RecipeSpeed(recipe=Recipe("copper_bar"), boosters=boosters).all
+    wires = RecipeSpeed(recipe=Recipe("wire"), boosters=boosters).all
+    print(copper_bar)
+    print(wires)
+    copper_bar.extend(wires)
+    copper_bar.extend(wires)
+    print(sum_items_by_rpm(copper_bar))
 
-    print(recipes_by_operation())
+

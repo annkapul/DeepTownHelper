@@ -1,0 +1,50 @@
+<html>
+<head>
+    <title>Recipes</title>
+    <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
+    <link rel="icon"
+      type="image/png"
+      href="{{ url_for('images', path='/favicon.ico') }}">
+</head>
+<body class="crafting_page">
+    <div class="menu">
+        <form method="post" action="reload_resources">
+            <input type="submit" value="Reload Res"/>
+        </form>
+        <form method="get" action="items">
+            <input type="submit" value="I want Crafting"/>
+        </form>
+        <form method="get" action="mines">
+            <input type="submit" value="I want Mining"/>
+        </form>
+    </div>
+
+    <div class="in">
+        <!-- Block with recipe output -->
+        <div>
+            <div class="header">Define everything:</div>
+            <form method="post" action="planner">
+                <select name="res">
+                    {% for operation, recipe in recipes_for_dropdown.items() %}
+                        <option disabled> ==== {{ operation }} ==== </option>
+                        {% for recipe_key, recipe_name in recipe.items() %}
+                            <option value="{{ recipe_key }}"
+                            {%- if  recipe_key == last_selected_item -%} selected {% endif %}
+                            >{{ recipe_name }}</option>
+                        {% endfor %}
+                    {% endfor %}
+                </select>
+                <input type="number" name="count" value="{{ last_selected_count }}"/>
+                <input type="submit"/>
+            </form>
+            <!-- END Block with initial forms -->
+            <!--  Show total resources -->
+        </div>
+
+    </div>
+
+
+
+
+</body>
+</html>
