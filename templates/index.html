@@ -63,7 +63,7 @@
                             {% if uuid != '0' %}
                             <input type="submit" value="-" width="8" height="8">
                             {% endif %}
-                            {% set img_url =  '/ui-mat-' ~ (recipe.in.name|lower|replace('_', '-') | replace(' ', '-'))  ~ '.png' %}
+                            {% set img_url = (recipe.in.name|lower|replace('_', '-') | replace(' ', '-'))  ~ '.png' %}
                             <img src="{{ url_for('images', path=img_url) }}" alt="{{ recipe.in }}" width="25">
                             <b> {{ recipe.in }} </b>
                         </label>
@@ -89,19 +89,19 @@
         {% endfor %}
     {% endmacro %}
     {% if opened_recipes.keys() | length %}
-    <div class="out smelting"><div class="header">Smelting</div>
+    <div class="out_container smelting"><div class="header">Smelting</div>
             {{ insert_recipe("smelting") }}
         </div>
-    <div class="out crafting"><div class="header">Crafting</div>
+    <div class="out_container crafting"><div class="header">Crafting</div>
             {{ insert_recipe("crafting") }}
         </div>
-    <div class="out chemistry"><div class="header">Chemistry</div>
+    <div class="out_container chemistry"><div class="header">Chemistry</div>
             {{ insert_recipe("chemistry") }}
         </div>
-    <div class="out jewelling"><div class="header">Jewelling</div>
+    <div class="out_container jewelling"><div class="header">Jewelling</div>
             {{ insert_recipe("jewelling") }}
         </div>
-        <div class="out planting"><div class="header">Planting</div>
+        <div class="out_container planting"><div class="header">Planting</div>
             {{ insert_recipe("planting") }}
         </div>
 

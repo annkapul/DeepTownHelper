@@ -4,6 +4,8 @@ import enum
 import uuid
 from typing import  NewType, Sequence
 from math import ceil
+import locale
+locale.setlocale(locale.LC_ALL, '')
 
 
 def all_resources():
@@ -68,7 +70,7 @@ class Item:
             count = int(self.count) + 1
         else:
             count = int(self.count)
-        return f"{self.pretty_name} x {count}"
+        return f"{self.pretty_name} x {count:n}"
 
     def __mul__(self, number: int):
         return Item(self.name, self.count * number)

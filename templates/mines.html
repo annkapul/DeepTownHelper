@@ -25,7 +25,6 @@
             <td><b>{{ mine_area }}</b></td>
             {% for elem, value in mine_elements.items() %}
             <td align="center">
-                <!--<img src="http://127.0.0.1:8000/images/ui-mat-copper-bar.png" alt="{{ elem }}" width="20"> <br> {{ elem }} <br>{{ value }}-->
                 {% set img_url =  '/ui-mat-' ~  elem|replace('_', '-')  ~ '.png' %}
                 <img src="{{ url_for('images', path=img_url) }}" alt="{{ elem }}" width="25"><br>{{ value }}
             </td>
