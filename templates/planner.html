@@ -6,7 +6,7 @@
       type="image/png"
       href="{{ url_for('images', path='/favicon.ico') }}">
 </head>
-<body class="crafting_page">
+<body class="planner_page">
     <div class="menu">
         <form method="post" action="reload_resources">
             <input type="submit" value="Reload Res"/>
@@ -19,26 +19,36 @@
         </form>
     </div>
 
-    <div class="in">
-        <!-- Block with recipe output -->
+    <div class="in_planner">
+        <!-- Block with mines output -->
         <div>
             <div class="header">Define everything:</div>
             <form method="post" action="planner">
                 <select name="res">
-                    {% for operation, recipe in recipes_for_dropdown.items() %}
-                        <option disabled> ==== {{ operation }} ==== </option>
-                        {% for recipe_key, recipe_name in recipe.items() %}
-                            <option value="{{ recipe_key }}"
-                            {%- if  recipe_key == last_selected_item -%} selected {% endif %}
-                            >{{ recipe_name }}</option>
-                        {% endfor %}
-                    {% endfor %}
                 </select>
-                <input type="number" name="count" value="{{ last_selected_count }}"/>
+                <input type="number" name="count" value=""/>
                 <input type="submit"/>
             </form>
-            <!-- END Block with initial forms -->
-            <!--  Show total resources -->
+        </div>
+        <!-- Block with smelting output -->
+        <div>
+            <div class="header">Define smelting (max=8):</div>
+            <form method="post" action="planner">
+                <select name="res">
+                </select>
+                <input type="number" name="count" value=""/>
+                <input type="submit"/>
+            </form>
+        </div>
+        <!-- Block with crafting output -->
+        <div>
+            <div class="header">Define crafting (max=8):</div>
+            <form method="post" action="planner">
+                <select name="res">
+                </select>
+                <input type="number" name="count" value=""/>
+                <input type="submit"/>
+            </form>
         </div>
 
     </div>

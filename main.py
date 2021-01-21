@@ -197,9 +197,14 @@ async def get_best_mines(request: Request):
     return templates.TemplateResponse("mines.html", context=context)
 
 
-@app.post("/add_item")
-async def add_item(item_id: str = Form(...)):
-    return {"item_id": item_id}
+@app.get("/planner", response_class=HTMLResponse)
+async def planner(request: Request):
+    result= {}
+    context = {
+        "request": request,
+        "result": result,
+        }
+    return templates.TemplateResponse("planner.html", context=context)
 
 
 if __name__ == '__main__':

@@ -28,6 +28,18 @@ div.in {
 
 }
 
+div.in_planner {
+    background-color: var(--start-bg-color);
+    border-color: var(--start-border-color);
+    border-style: solid;
+    border-width: 1px;
+    margin: 5;
+    padding: 10;
+    grid-area: in;
+    border-radius: 10px;
+
+}
+
 div.out {
     background-color: var(--end-bg-color);
     border-color: var(--end-border-color);
@@ -98,6 +110,20 @@ body.crafting_page {
     'menu in in in in in'
     'menu smelting crafting chemistry jewelling planting';
     /*grid-template-rows: auto auto auto auto;*/
+    grid-gap: 5px;
+}
+
+body.planner_page {
+    font-family: roboto;
+    font-size: 14px;
+    background-color: var(--main-bg-color);
+    display: grid;
+    grid-template-columns: 10% 60% 35%;
+    grid-auto-flow: rows;
+    grid-template-areas:
+    'menu in out .'
+    'menu in out .'
+    'menu in out .';
     grid-gap: 5px;
 }
 

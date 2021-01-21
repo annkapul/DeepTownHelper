@@ -88,42 +88,47 @@ class Speed:
                  speed_rpm: int = None):
         defined_vars = [i for i in [item.count, time_sec, speed_rpm] if i is not None]
         if defined_vars.__len__() < 2:
-            raise BaseException(
+            # raise BaseException(
+            print(
                 f"Need at least 2 parameters to initialize Speed(). "
                 f"We got {[item.count, time_sec, speed_rpm]=}")
         self.item = item
         self._quantity = item.count
+        if isinstance(time_sec, float): time_sec = int(time_sec)
         if isinstance(time_sec, int):
             self._time = datetime.timedelta(seconds=time_sec)
+        elif isinstance(time_sec, datetime.timedelta):
+            self._time = time_sec
+            assert self._time.total_seconds() > 0
         else:
             self._time = time_sec
         self._speed = speed_rpm
-        # print(locals())
+
 
     @property
     def quantity(self):
-        if self._quantity: return self._quantity
-        return ceil(self._speed * (self._time.seconds // 60))
+        if self._quantity is not None: return self._quantity
+        return ceil(self._speed * (self._time.total_seconds() // 60))
 
     @property
     def time(self):
-        if self._time: return self._time
+        if self._time is not None: return self._time
         return datetime.timedelta(minutes=int(self._quantity / self._speed))
 
     @property
     def speed(self):
-        if self._speed: return self._speed
-        speed = self._quantity / (self._time.seconds / 60)
+        if self._speed is not None: return self._speed
+        speed = self._quantity / (self._time.total_seconds() / 60)
         return round(speed, 3)
 
     def __add__(self, other):
         return Speed(item=self.item, speed_rpm=self.speed + other.speed)
 
     def __repr__(self):
-        return f"{self.item.name} x {self.speed} RPM"
+        return f"{self.item.name} x {self.speed:.3} RPM"
 
     def __mul__(self, mul: float):
-        return Speed(item=self.item, speed_rpm=int(self.speed * mul))
+        return Speed(item=self.item, speed_rpm=round(self.speed * mul, 3))
 
 
 ItemVector = NewType("ItemVector", Sequence[Item])
@@ -147,7 +152,7 @@ def sum_items_by_rpm(speeds: SpeedVector) -> SpeedVector:
             rpm_by_items[speed_obj.item.key] = speed_obj.speed
         else:
             rpm_by_items[speed_obj.item.key] += speed_obj.speed
-    print(f"{rpm_by_items=}")
+    # print(f"{rpm_by_items=}")
     return [Speed(Item(key), speed_rpm=rpm) for key, rpm in rpm_by_items.items()]
 
 
@@ -244,7 +249,7 @@ class RecipeSpeed():
         # Multiply both values to booster multiplier
         multiplier = sum(list(self.boosters.values())) if self.boosters else 1
         speed_production = Speed(self.product['product'], self.product['time']) * multiplier
-        speed_consumings = [ingr.rpm(time_sec=self.product['time'].seconds) * (-1 * multiplier)
+        speed_consumings = [ingr.rpm(time_sec=self.product['time'].total_seconds()) * (-1 * multiplier)
                         for ingr in self.product['consume']]
         print(f" {speed_consumings=}  {speed_production=}")
 
@@ -311,10 +316,33 @@ if __name__ == "__main__":
         }
     copper_bar = RecipeSpeed(recipe=Recipe("copper_bar"), boosters=boosters).all
     wires = RecipeSpeed(recipe=Recipe("wire"), boosters=boosters).all
-    print(copper_bar)
-    print(wires)
-    copper_bar.extend(wires)
-    copper_bar.extend(wires)
-    print(sum_items_by_rpm(copper_bar))
 
+    steel_plate = RecipeSpeed(Recipe('steel_plate'),
+                              boosters={
+                                  "smelting": {
+                                      "count": 2,
+                                      "bot": 1.2,
+                                      }
+                                  }).all
+    steel_bar = RecipeSpeed(Recipe('steel_bar'),
+                              boosters={
+                                  "smelting": {
+                                      "count": 5,
+                                      "bot": 1.2,
+                                      }
+                                  }).all
+    iron_bar = RecipeSpeed(Recipe('iron_bar'),
+                              boosters={
+                                  "smelting": {
+                                      "count": 1,
+                                      "bot": 1.2,
+                                      }
+                                  }).all
+    all = []
+    all.extend(steel_plate)
+    all.extend(steel_bar)
+    all.extend(iron_bar)
+    print(all)
+    print(sum_items_by_rpm(all))
+    # print(RecipeSpeed(Recipe("steel_plate", count=720)).all)
 
