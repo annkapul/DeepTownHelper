@@ -1,3 +1,4 @@
+{% import "macros.jinja" as macros %}
 <html>
 <head>
     <title>Recipes</title>
@@ -7,54 +8,119 @@
       href="{{ url_for('images', path='/favicon.ico') }}">
 </head>
 <body class="planner_page">
-    <div class="menu">
-        <form method="post" action="reload_resources">
-            <input type="submit" value="Reload Res"/>
-        </form>
-        <form method="get" action="items">
-            <input type="submit" value="I want Crafting"/>
-        </form>
-        <form method="get" action="mines">
-            <input type="submit" value="I want Mining"/>
-        </form>
-    </div>
-
+    {{ macros.menu() }}
     <div class="in_planner">
-        <!-- Block with mines output -->
-        <div>
-            <div class="header">Define everything:</div>
-            <form method="post" action="planner">
-                <select name="res">
-                </select>
-                <input type="number" name="count" value=""/>
-                <input type="submit"/>
+        <form method="get" action="planner">
+            <form method="get" action="download_planner">
+                <input type="submit" value="Download input data"/>
             </form>
-        </div>
-        <!-- Block with smelting output -->
-        <div>
-            <div class="header">Define smelting (max=8):</div>
-            <form method="post" action="planner">
-                <select name="res">
-                </select>
-                <input type="number" name="count" value=""/>
-                <input type="submit"/>
+            <form method="get" action="upload_planner" enctype="multipart/form-data">
+                <input type="file" name="file" id="fileToUpload">
+                <input type="submit" value="Upload data" name="submit">
             </form>
-        </div>
-        <!-- Block with crafting output -->
-        <div>
-            <div class="header">Define crafting (max=8):</div>
-            <form method="post" action="planner">
-                <select name="res">
-                </select>
-                <input type="number" name="count" value=""/>
-                <input type="submit"/>
-            </form>
-        </div>
+            <input type="submit"/>
+            <div class="two-col">
+                <div>
+                    <!-- Block with smelting input -->
+                    <div class="light-bound">
+                        <div class="header">Smelting</div>
+                        <div class="two-col">
+                        {{ macros.several_dropdown_inputs(recipes_for_dropdown,smelting, "smelting") }}
+                        <div class="out">
+                        </div></div>
+                    </div>
+                    <!-- Block with crafting input -->
+                    <div  class="light-bound">
+                        <div class="header">Crafting:</div>
+
+                        <div class="two-col">
+                            {{ macros.several_dropdown_inputs(recipes_for_dropdown, crafting, "crafting") }}
+                        <div class="out">
+                        </div></div>
+                    </div>
+                    <!-- Block with chemistry input -->
+                    <div  class="light-bound" >
+                        <div class="header">Chemistry:</div>
+                        <div class="two-col">
+                            {{ macros.several_dropdown_inputs(recipes_for_dropdown,chemistry, "chemistry") }}
+                            <div class="out">
+                        </div></div>
+                    </div>
+                    <div  class="light-bound">
+                        <div class="header">Jewelling:</div>
+                        <div class="two-col">
+                            {{ macros.several_dropdown_inputs(recipes_for_dropdown, jewelling, "jewelling") }}
+                            <div class="out">
+                        </div>
+                        </div>
+                    </div>
+                    <div  class="light-bound">
+                        <div class="header">Planting:</div>
+                            <div class="two-col">
+                            {{ macros.several_dropdown_inputs(recipes_for_dropdown, planting, "planting") }}
+
+                            <div class="out">
+
+                            </div>
+                            </div>
+                    </div>
+                </div>
+
+                <div  class="light-bound">
+                    <!--  Part for mines-->
+                    <div class="header">Mines</div>
+
+                    <div class="div_input">
+                        <label> Count:
+                        <input type="number" name="count_of_mines" value="{{ count_of_mines }}"/></label>
+                    </div>
+                    <div class="header"> &nbsp&nbsp&nbsp&nbsp&nbspArea&nbsp&nbsp&nbsp&nbsp&nbsp&nbspMineLvl</div>
+                    {% for area, lvl in mines.items() %}
+                    <div>
+                        <input type="number" value="{{ area }}" class="small_input" name="minearea_{{ area }}" max="120"/>
+                        <input type="number" value="{{ lvl }}" class="xsmall_input" name="minelvl_{{ area }}" max="9" />
+                    </div>
+                    {% endfor %}
+                    {% if  count_of_mines > (mines |length) %}
+                    {% for number in range(count_of_mines - (mines |length)) %}
+                     <div>
+                        <input type="number" value="" class="small_input"  name="mineareaN_{{ number }}" max="120"/>
+                        <input type="number" value="" class="xsmall_input" name="minelvlN_{{ number }}" max="9"/>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+
+                </div>
+            </div>
+            <input type="submit"/>
+        </form>
 
     </div>
 
 
+    {% if result %}
 
+    <div class="out">
+        <table>
+        {% for speed, quantity_5h, quantity_1d in result  %}
+            <tr>
+        {% set img_url = (speed.item.key|lower|replace('_', '-') | replace(' ', '-'))  ~ '.png' %}
+
+                <td>
+                    <img src="{{ url_for('images', path=img_url) }}" alt="{{ item }}" width="25">
+        {% if speed.speed < 0 %}
+            <b> {{ speed }} </b>
+        {% else %}
+             {{ speed }}
+        {% endif %}
+        </td> <!-- commented until is fixed
+                <td> {{ quantity_5h }} </td>
+                <td> {{ quantity_1d }} </td> -->
+                </tr>
+        {% endfor %}
+        </table>
+    </div>
+    {% endif%}
 
 </body>
 </html>

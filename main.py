@@ -1,12 +1,15 @@
-from fastapi import FastAPI, Request, Form
-from fastapi.responses import HTMLResponse
+from fastapi import FastAPI, Request, Form, Cookie, File, UploadFile
+from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
+from typing import Dict, TypeVar, Union, Any, Optional
 
 import calculator
 import mine_calculator
 import dictdiffer
+import json
+from datetime import timedelta
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -129,14 +132,12 @@ async def del_product_from_button(request: Request):
     ids_opened_frames = list(saved_resource_page.opened_recipes.keys())
     print(f"{ids_opened_frames=}")
 
-    import json
-
     print(f"{saved_resource_page.opened_recipes}")
     total = [ingr
              for uuid, recipe in saved_resource_page.opened_recipes.items()
              for ingr in recipe["consume"]
              if ingr.uuid not in ids_opened_frames]
-    total = calculator.sum_items_by_count( total )
+    total = calculator.sum_items_by_count(total)
 
     context = {"request": request,
                "total": total,
@@ -197,12 +198,173 @@ async def get_best_mines(request: Request):
     return templates.TemplateResponse("mines.html", context=context)
 
 
+class PlannerModel(BaseModel):
+    recipes_for_dropdown: dict
+    mines: Dict[int, int]  # area, lvl
+    smelting: Dict[int, Union[Any, None]]  # number, recipe
+    crafting: Dict[int, Union[Any, None]]  # number, recipe
+    chemistry: Dict[int, Union[Any, None]]  # number, recipe
+    jewelling: Dict[int, Union[Any, None]]  # number, Recipe
+    planting: Dict[int, Union[Any, None]]  # number, Recipe
+    boosters: Dict[str, Any]
+    count_of_mines: int
+
+
+default_planner = PlannerModel(
+    recipes_for_dropdown=calculator.recipes_by_operation(),
+    mines={1: 9,
+           2: 7,
+           3: 6},
+    smelting={
+        0: "iron_bar",
+        1: "",
+        2: "",
+        3: "",
+        4: "",
+        5: "",
+        6: "",
+        7: ""
+        },
+    crafting={
+        0: "diamond_cutter",
+        1: "",
+        2: "",
+        3: "",
+        4: "",
+        5: "",
+        6: "",
+        7: ""
+    },
+    jewelling={
+        0: "polished_diamond",
+        1: "",
+        2: "",
+        3: "",
+        4: "",
+        5: "",
+        6: "",
+        7: ""
+    },
+    planting={
+        0: "liana",
+        1: "",
+        2: "",
+        3: "",
+        4: "",
+        5: "",
+        6: "",
+        7: ""
+    },
+    chemistry={
+        0: "clean_water",
+        1: "",
+        2: "",
+        3: "",
+        4: "",
+        5: "",
+        6: "",
+        7: ""
+    },
+    boosters={
+        "smelting": ["bot"]
+    },
+    count_of_mines=5
+    )
+
+
+def plain_to_dict(plain_dict, base_dict):
+    nested_dict = base_dict
+    nested_dict["mines"] = dict()
+    for key, value in plain_dict.items():
+        print(f"{key=}, {value=}")
+        if key in ["count_of_mines"]:
+            nested_dict[key] = int(value)
+            continue
+        operation_name, number = key.split("_")
+        print(f" |----> {operation_name=}, {number=}")
+
+        if operation_name in [building.name.lower() for building in calculator.BUILDING]:
+            nested_dict[operation_name][int(number)] = value
+            continue
+        if operation_name == "minearea":
+            print(f"For mines {key=}, {value=}")
+            if not value or not plain_dict[f'minelvl_{number}']: continue
+            nested_dict['mines'][int(value)] = int(plain_dict[f'minelvl_{number}'])
+            continue
+        if operation_name == "mineareaN":
+            if not plain_dict[f'minelvlN_{number}'] or not plain_dict[f'mineareaN_{number}']: continue
+
+            nested_dict['mines'][int(value)] = int(plain_dict[f'minelvlN_{number}'])
+            continue
+        if "minelvl" in operation_name: continue
+    return nested_dict
+
+
 @app.get("/planner", response_class=HTMLResponse)
 async def planner(request: Request):
-    result= {}
+    result = {}
+    if request.query_params.__len__() == 0:
+        planner_model = default_planner.dict()
+        print("QUERY IS EMPTY!")
+    else:
+        planner_model = plain_to_dict(request.query_params, default_planner.dict())
+        list_of_speeds = []
+        for operation, data in planner_model.items():
+            print(f"{operation=} {data=}")
+            if operation in ['boosters', 'recipes_for_dropdown', 'count_of_mines']:
+                continue
+            # Define speed for mines
+            if operation in ['mines']:
+                for area, lvl in data.items():
+                    if not area or not lvl: continue
+                    list_of_speeds += mine_calculator.Mine(area=area, level=lvl).get_items_speed()
+                continue
+            # Define speeds for smelting / crafting etc
+            for _, recipe in data.items():
+                if recipe == "" or recipe is None: continue
+                list_of_speeds += calculator.RecipeSpeed(calculator.Recipe(recipe)).all
+        sum_list_of_speeds = calculator.sum_items_by_rpm(list_of_speeds)
+        #   Group like SPEED, COUNT FOR 5h , COUNT for 1 DAY
+        result = [
+            (speed,
+             speed.set("_time", timedelta(hours=5)).quantity,
+             speed.set("_time", timedelta(days=1)).quantity
+             )
+            for speed in sum_list_of_speeds]
+        print(f"TRIPLE VARS {result=}")
     context = {
         "request": request,
         "result": result,
+        **planner_model
+        }
+
+    return templates.TemplateResponse("planner.html", context=context)
+
+
+@app.get("/download_planner", response_class=FileResponse)
+async def download_planner(request: Request):
+    if request.query_params.__len__() == 0:
+        planner_model = default_planner.dict()
+        print("QUERY IS EMPTY!")
+    else:
+        planner_model = plain_to_dict(request.query_params, default_planner.dict())
+    import pickle
+
+    file_name = "tmp/planner_save.txt"
+    with open(file_name, "w") as f:
+        json.dump(planner_model, f, indent=4)
+
+    return FileResponse(file_name, media_type='application/octet-stream', filename="planner_save.txt")
+
+
+@app.get("/upload_planner", response_class=HTMLResponse)
+async def upload_planner(request: Request, file: UploadFile = File(...)):
+
+    planner_model = json.load(file.file)
+    print(f"{planner_model=}")
+    context = {
+        "request": request,
+        **planner_model
         }
     return templates.TemplateResponse("planner.html", context=context)
 

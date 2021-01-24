@@ -4,10 +4,11 @@ import enum
 from itertools import islice
 from typing import NewType, Sequence
 
-from calculator import Item
+from calculator import Item, Speed, sum_items_by_rpm
 
 mine_count = 0
 modifier = None
+
 
 def all_mines():
     return yaml.load(open("mines.yaml"), Loader=yaml.SafeLoader)
@@ -37,7 +38,6 @@ class Mine:
         self.level = level
         self.area = area
         self.elements = mines.get(self.area)
-
         self.speed = speed_by_level[level]
 
     def produce_by_time(self, minutes: int):
@@ -49,9 +49,17 @@ class Mine:
     def produce_for_count(self, item: Item):
         if self.elements.get(item.key) is None:
             return 0
-        item_probability = self.elements.get(item.key) / 100.0
-        required_time = item.count / (self.speed * item_probability)
+        required_time = item.count / (self.speed * self.item_probability(item.key))
         return datetime.timedelta(minutes=required_time)
+
+    def item_probability(self, item_name):
+        if self.elements.get(item_name) is None: return 0
+        return self.elements.get(item_name) / 100.0
+
+    def get_items_speed(self):
+
+        return [Speed(Item(el_name), speed_rpm=(self.speed * self.item_probability(el_name)))
+                for el_name, el_value in self.elements.items()]
 
 
 def find_best_mines(item: Item,
