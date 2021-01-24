@@ -1,3 +1,4 @@
+{% import "macros.jinja" as macros %}
 <html>
 <head>
     <title>Mines</title>
@@ -7,17 +8,7 @@
       href="{{ url_for('images', path='/favicon.ico') }}">
 </head>
 <body class="mining_page">
-    <div class="menu">
-        <form method="post" action="reload_resources">
-            <input type="submit" value="Reload Res"/>
-        </form>
-        <form method="get" action="items">
-            <input type="submit" value="I want Crafting"/>
-        </form>
-        <form method="get" action="mines">
-            <input type="submit" value="I want Mining"/>
-        </form>
-    </div>
+        {{ macros.menu() }}
 
         <table>
         {% for mine_area, mine_elements in mines.items() %}

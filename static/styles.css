@@ -87,22 +87,27 @@ div.recipe {
 div.time {
     border: aqua;
     font-style: italic;
-    padding: 20;
+    padding: 10;
 }
 
 select {
     padding: 5;
 }
 
-input {
-    padding: 5;
+input, select {
+    padding: 5px;
+    margin: 1px;
 
 }
 
-body.crafting_page {
-    font-family: roboto;
+body {
+    font-family: roboto, system-ui;
     font-size: 14px;
     background-color: var(--main-bg-color);
+}
+
+
+body.crafting_page {
     display: grid;
     grid-template-columns: 10% 17% 17% 17% 17% 17%;
     grid-auto-flow: row;
@@ -114,11 +119,8 @@ body.crafting_page {
 }
 
 body.planner_page {
-    font-family: roboto;
-    font-size: 14px;
-    background-color: var(--main-bg-color);
     display: grid;
-    grid-template-columns: 10% 60% 35%;
+    grid-template-columns: 10% 40% 55%;
     grid-auto-flow: rows;
     grid-template-areas:
     'menu in out .'
@@ -128,9 +130,6 @@ body.planner_page {
 }
 
 body.mining_page {
-    font-family: roboto;
-    font-size: 14px;
-    background-color: var(--main-bg-color);
     display: grid;
     grid-template-columns: 10% 40% 50%;
     grid-auto-flow: row;
@@ -148,7 +147,7 @@ div.div_input > label  input {
 }
 div.div_input {
     padding: 5px;
-    margin: 5px;
+    margin: 10px;
 }
 
 div.menu {
@@ -200,7 +199,7 @@ div.planting  {
 }
 
 div.header {
- font-size: 18px;
+ font-size: 16px;
  font-weight: bold;
  padding: 10px;
  color: var(--main-bg-color);
@@ -211,4 +210,36 @@ div.header {
 
 img {
       vertical-align: middle;
+}
+
+.debug {
+    background-color: red;
+}
+
+
+div.two-col {
+  display: flex;
+  width: inherits;
+}
+
+select.medium_input {
+    width: 180;
+}
+
+input.small_input {
+    width: 100;
+}
+
+input.xsmall_input {
+    width: 60;
+}
+
+div.light-bound {
+    border-color: var(--main-bg-color);
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 5px;
+    margin: 8px;
+    padding: 8px;
+
 }

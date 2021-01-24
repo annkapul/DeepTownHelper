@@ -85,7 +85,7 @@ class Speed:
     def __init__(self,
                  item: Item,
                  time_sec: (datetime.timedelta, int) = None,
-                 speed_rpm: int = None):
+                 speed_rpm: float = None):
         defined_vars = [i for i in [item.count, time_sec, speed_rpm] if i is not None]
         if defined_vars.__len__() < 2:
             # raise BaseException(
@@ -104,7 +104,6 @@ class Speed:
             self._time = time_sec
         self._speed = speed_rpm
 
-
     @property
     def quantity(self):
         if self._quantity is not None: return self._quantity
@@ -121,11 +120,15 @@ class Speed:
         speed = self._quantity / (self._time.total_seconds() / 60)
         return round(speed, 3)
 
+    def set(self, name, value):
+        self.__setattr__(name, value)
+        return self
+
     def __add__(self, other):
         return Speed(item=self.item, speed_rpm=self.speed + other.speed)
 
     def __repr__(self):
-        return f"{self.item.name} x {self.speed:.3} RPM"
+        return f"{self.item.name} x {self.speed:.3f} RPM"
 
     def __mul__(self, mul: float):
         return Speed(item=self.item, speed_rpm=round(self.speed * mul, 3))
@@ -164,6 +167,7 @@ class Recipe:
         self.key = key
         self.name = key
         if not self.exists:
+            print(f"Can't create Recipe {key=}. It doesn't exist")
             pass
             # raise BaseException(f"Can't create Recipe {key=}. It doesn't exist")
         else:
@@ -233,7 +237,7 @@ class Recipe:
         return result
 
 
-class RecipeSpeed():
+class RecipeSpeed:
     def __init__(self, recipe: Recipe, boosters: dict = None):
         # print(f"{boosters=}")
         self.product = recipe.produce

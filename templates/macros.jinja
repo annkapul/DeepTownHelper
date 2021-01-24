@@ -1,0 +1,33 @@
+{% macro menu() %}
+        <div class="menu">
+        <form method="post" action="reload_resources">
+            <input type="submit" value="Reload Res"/>
+        </form>
+        <form method="get" action="items">
+            <input type="submit" value="I want Crafting"/>
+        </form>
+        <form method="get" action="mines">
+            <input type="submit" value="I want Mining"/>
+        </form>
+        <form method="get" action="planner">
+            <input type="submit" value="I want Planning"/>
+        </form>
+    </div>
+{% endmacro %}
+
+{% macro several_dropdown_inputs(recipes_for_dropdown, operation_obj, group_name) %}
+<div>
+    {% for number, recipe in operation_obj.items() %}
+               <div>
+                <select class="medium_input" name="{{ group_name }}_{{ number }}">
+                    <option value=""> == empty == </option>
+                    {% for recipe_key, recipe_name in recipes_for_dropdown[group_name|title].items() %}
+                    <option value="{{ recipe_key }}"
+                    {%- if  recipe_key == recipe -%} selected {% endif %}
+                    >{{ recipe_name }}</option>
+                    {% endfor%}
+                </select>
+               </div>
+    {% endfor %}
+</div>
+{% endmacro %}

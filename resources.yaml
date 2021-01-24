@@ -352,6 +352,33 @@ decoupler_ii:
     out: 1
     time_sec: 3600
 
+rocket_type_a:
+  crafting:
+    in:
+      optic_fiber: 10
+      steel_plate: 50
+      solar_panel: 1
+    out: 1
+    time_sec: 1800
+
+rocket_type_b:
+  crafting:
+    in:
+      moonstone: 1
+      insulated_wire: 100
+      titanium_bar: 10
+    out: 1
+    time_sec: 1800
+
+rocket_type_c:
+  crafting:
+    in:
+      red_beryl: 1
+      sapphire_crystal_glass: 100
+      magnetit_bar: 1
+    out: 1
+    time_sec: 1800
+
 stage_iii:
   name: "Stage III"
   crafting:

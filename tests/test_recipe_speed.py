@@ -11,8 +11,7 @@ def test_recipe_speed():
 def test_sum_speed():
     prod1 = c.RecipeSpeed(c.Recipe("steel_plate", count=10)).all
     prod2 = c.RecipeSpeed(c.Recipe("steel_plate", count=1200)).all
-    prod1.extend(prod2)
-    assert str(c.sum_items_by_rpm(prod1)) == "[Steel Bar x -5.0 RPM, Steel Plate x 1.0 RPM]"
+    assert str(c.sum_items_by_rpm(prod1 + prod2)) == "[Steel Bar x -5.0 RPM, Steel Plate x 1.0 RPM]"
 
 
 def test_boosters():
