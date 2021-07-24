@@ -166,6 +166,25 @@ table {
     grid-area: table ;
 }
 
+
+table.planning {
+    border-collapse: collapse;
+    border: 1px solid #3871a2;
+    border-spacing: 0px;
+    font-family: monospace;
+    font-size: medium;
+}
+table.planning > tbody > tr {
+    height: 30px;
+}
+
+table.planning > tbody > tr:nth-child(2n)  {
+    border: 1px solid #3871a2;
+    background-color: var(--main-bg-color);
+}
+
+
+
 select {
   width: 300px;
   border-radius:2px;

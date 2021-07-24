@@ -327,8 +327,9 @@ async def planner(request: Request):
         #   Group like SPEED, COUNT FOR 5h , COUNT for 1 DAY
         result = [
             (speed,
-             speed.set("_time", timedelta(hours=5)).quantity,
-             speed.set("_time", timedelta(days=1)).quantity
+             speed.quantity(time_sec=timedelta(hours=1)),
+             speed.quantity(time_sec=timedelta(hours=8)),
+             speed.quantity(time_sec=timedelta(days=1))
              )
             for speed in sum_list_of_speeds]
         print(f"TRIPLE VARS {result=}")

@@ -101,11 +101,18 @@
     {% if result %}
 
     <div class="out">
-        <table>
-        {% for speed, quantity_5h, quantity_1d in result  %}
-            <tr>
-        {% set img_url = (speed.item.key|lower|replace('_', '-') | replace(' ', '-'))  ~ '.png' %}
+        <table class="planning">
 
+            <th>Resource</th>
+            <th>After 1hour</th>
+            <th>After 8hours</th>
+            <th>After 24hours</th>
+
+        {% for speed, quantity_1h, quantity_8h, quantity_1d in result  %}
+
+            <tr>
+        {% set img_url = (speed.item.key|lower|replace('_', '-') | replace('
+                ', '-'))  ~ '.png' %}
                 <td>
                     <img src="{{ url_for('images', path=img_url) }}" alt="{{ item }}" width="25">
         {% if speed.speed < 0 %}
@@ -113,10 +120,11 @@
         {% else %}
              {{ speed }}
         {% endif %}
-        </td> <!-- commented until is fixed
-                <td> {{ quantity_5h }} </td>
-                <td> {{ quantity_1d }} </td> -->
-                </tr>
+                </td>
+                <td> {{ quantity_1h }} </td>
+                <td> {{ quantity_8h }} </td>
+                <td> {{ quantity_1d }} </td>
+            </tr>
         {% endfor %}
         </table>
     </div>

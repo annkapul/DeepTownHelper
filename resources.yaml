@@ -286,6 +286,31 @@ compressor:
     out: 1
     time_sec: 180
 
+motherboard:
+  crafting:
+    in:
+      silicon: 3
+      circuits: 3
+      gold_bar: 1
+    out: 1
+    time_sec: 1800
+
+aluminium_tank:
+  crafting:
+    in:
+      aluminium_bar: 3
+    out: 5
+    time_sec: 120
+
+gas_cylinder:
+  crafting:
+    in:
+      steel_plate: 1
+      aluminium_tank: 1
+      plastic_plate: 1
+    out: 3
+    time_sec: 180
+
 gear:
   crafting:
     in:
