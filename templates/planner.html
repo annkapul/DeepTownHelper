@@ -10,14 +10,14 @@
 <body class="planner_page">
     {{ macros.menu() }}
     <div class="in_planner">
-        <form method="get" action="planner">
-            <!-- <form method="get" action="download_planner">
+        <!-- <form method="get" action="download_planner">
                 <input type="submit" value="Download input data"/>
-            </form>
-            <form method="get" action="upload_planner" enctype="multipart/form-data">
-                <input type="file" name="file" id="fileToUpload">
-                <input type="submit" value="Upload data" name="submit">
-            </form> -->
+        </form> -->
+        <form method="get" action="upload_planner" enctype="multipart/form-data">
+            <input type="file" name="file" id="fileToUpload">
+            <input type="submit" value="upload_data" name="submit">
+        </form>
+        <form method="get" action="planner">
             <input type="submit"/>
             <div class="two-col">
                 <div>
@@ -104,13 +104,13 @@
         <table class="planning">
 
             <th>Resource</th>
-            <th>After 1hour</th>
-            <th>After 8hours</th>
-            <th>After 24hours</th>
+            <th>1hour</th>
+            <th>8hours</th>
+            <th>24hours</th>
 
         {% for speed, quantity_1h, quantity_8h, quantity_1d in result  %}
 
-            <tr>
+            <tr >
         {% set img_url = (speed.item.key|lower|replace('_', '-') | replace('
                 ', '-'))  ~ '.png' %}
                 <td>

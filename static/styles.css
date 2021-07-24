@@ -178,6 +178,11 @@ table.planning > tbody > tr {
     height: 30px;
 }
 
+table.planning > tbody > tr > td:not(:first-child) {
+    text-align: right;
+    padding: 0px 20px;
+}
+
 table.planning > tbody > tr:nth-child(2n)  {
     border: 1px solid #3871a2;
     background-color: var(--main-bg-color);
