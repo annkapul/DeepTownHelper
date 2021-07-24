@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, Form, Cookie, File, UploadFile
+from fastapi import FastAPI, Request, Form, Cookie, File, UploadFile, Response
 from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -9,6 +9,7 @@ import calculator
 import mine_calculator
 import dictdiffer
 import json
+import pickle, codecs
 from datetime import timedelta
 
 app = FastAPI()
@@ -276,18 +277,18 @@ def plain_to_dict(plain_dict, base_dict):
     nested_dict = base_dict
     nested_dict["mines"] = dict()
     for key, value in plain_dict.items():
-        print(f"{key=}, {value=}")
+        # print(f"{key=}, {value=}")
         if key in ["count_of_mines"]:
             nested_dict[key] = int(value)
             continue
         operation_name, number = key.split("_")
-        print(f" |----> {operation_name=}, {number=}")
+        # print(f" |----> {operation_name=}, {number=}")
 
         if operation_name in [building.name.lower() for building in calculator.BUILDING]:
             nested_dict[operation_name][int(number)] = value
             continue
         if operation_name == "minearea":
-            print(f"For mines {key=}, {value=}")
+            # print(f"For mines {key=}, {value=}")
             if not value or not plain_dict[f'minelvl_{number}']: continue
             nested_dict['mines'][int(value)] = int(plain_dict[f'minelvl_{number}'])
             continue
@@ -300,72 +301,86 @@ def plain_to_dict(plain_dict, base_dict):
     return nested_dict
 
 
+# async def save_cookies(response: Response):
+
+
 @app.get("/planner", response_class=HTMLResponse)
-async def planner(request: Request):
-    result = {}
-    if request.query_params.__len__() == 0:
-        planner_model = default_planner.dict()
-        print("QUERY IS EMPTY!")
+async def planner(request: Request,
+                  planner_model: Optional[str] = Cookie(None)):
+    save_cookies = True
+
+    if request.query_params.__len__() > 0:
+        print("Reading from parameters")
+        _planner_model = plain_to_dict(request.query_params,
+                                       default_planner.dict())
+
+    elif planner_model:
+        print("Reading from cookies")
+        _planner_model = pickle.loads(codecs.encode(planner_model))
+        print(f"{_planner_model=}")
+
     else:
-        planner_model = plain_to_dict(request.query_params, default_planner.dict())
-        list_of_speeds = []
-        for operation, data in planner_model.items():
-            print(f"{operation=} {data=}")
-            if operation in ['boosters', 'recipes_for_dropdown', 'count_of_mines']:
-                continue
-            # Define speed for mines
-            if operation in ['mines']:
-                for area, lvl in data.items():
-                    if not area or not lvl: continue
-                    list_of_speeds += mine_calculator.Mine(area=area, level=lvl).get_items_speed()
-                continue
-            # Define speeds for smelting / crafting etc
-            for _, recipe in data.items():
-                if recipe == "" or recipe is None: continue
-                list_of_speeds += calculator.RecipeSpeed(calculator.Recipe(recipe)).all
-        sum_list_of_speeds = calculator.sum_items_by_rpm(list_of_speeds)
-        #   Group like SPEED, COUNT FOR 5h , COUNT for 1 DAY
-        result = [
-            (speed,
-             speed.quantity(time_sec=timedelta(hours=1)),
-             speed.quantity(time_sec=timedelta(hours=8)),
-             speed.quantity(time_sec=timedelta(days=1))
-             )
-            for speed in sum_list_of_speeds]
-        print(f"TRIPLE VARS {result=}")
+        _planner_model = default_planner.dict()
+        print("QUERY IS EMPTY!")
+
+    result = evaluate_planner(_planner_model)
     context = {
         "request": request,
         "result": result,
-        **planner_model
+        **_planner_model
         }
 
-    return templates.TemplateResponse("planner.html", context=context)
+    response = templates.TemplateResponse("planner.html", context=context)
+    if save_cookies:
+        response.set_cookie(key='planner_model',
+                            value=pickle.dumps(_planner_model, 0).decode()
+                            )
+    return response
 
 
-@app.get("/download_planner", response_class=FileResponse)
-async def download_planner(request: Request):
-    if request.query_params.__len__() == 0:
-        planner_model = default_planner.dict()
-        print("QUERY IS EMPTY!")
-    else:
-        planner_model = plain_to_dict(request.query_params, default_planner.dict())
-    import pickle
+def evaluate_planner(planner_model):
 
-    file_name = "tmp/planner_save.txt"
-    with open(file_name, "w") as f:
-        json.dump(planner_model, f, indent=4)
+    print(f"Starting evaluate_planner {planner_model}")
+    list_of_speeds = []
+    for operation, data in planner_model.items():
+        # print(f"{operation=} {data=}")
+        if operation in ['boosters', 'recipes_for_dropdown', 'count_of_mines']:
+            continue
+        # Define speed for mines
+        if operation in ['mines']:
+            for area, lvl in data.items():
+                if not area or not lvl: continue
+                list_of_speeds += mine_calculator.Mine(area=area,
+                                                       level=lvl).get_items_speed()
+            continue
+        # Define speeds for smelting / crafting etc
+        for _, recipe in data.items():
+            if recipe == "" or recipe is None: continue
+            list_of_speeds += calculator.RecipeSpeed(
+                calculator.Recipe(recipe)).all
+    sum_list_of_speeds = calculator.sum_items_by_rpm(list_of_speeds)
+    #   Group like SPEED, COUNT FOR 5h , COUNT for 1 DAY
+    result = [
+        (speed,
+         speed.quantity(time_sec=timedelta(hours=1)),
+         speed.quantity(time_sec=timedelta(hours=8)),
+         speed.quantity(time_sec=timedelta(days=1))
+         )
+        for speed in sum_list_of_speeds]
+    print(f"TRIPLE VARS {result=}")
+    return result
 
-    return FileResponse(file_name, media_type='application/octet-stream', filename="planner_save.txt")
 
 
 @app.get("/upload_planner", response_class=HTMLResponse)
-async def upload_planner(request: Request, file: UploadFile = File(...)):
-
-    planner_model = json.load(file.file)
-    print(f"{planner_model=}")
+async def upload_planner(request: Request,
+                         planner_model: Optional[str] = Cookie(None)
+                         ):
+    _planner_model = json.loads(planner_model)
+    print(f"{_planner_model=}")
     context = {
         "request": request,
-        **planner_model
+        **_planner_model
         }
     return templates.TemplateResponse("planner.html", context=context)
 
