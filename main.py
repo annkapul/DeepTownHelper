@@ -8,7 +8,6 @@ from typing import Dict, TypeVar, Union, Any, Optional
 import calculator
 import mine_calculator
 import dictdiffer
-import json
 import pickle, codecs
 from datetime import timedelta
 
@@ -50,9 +49,18 @@ saved_mines_page = MinePageModel(
 
 
 @app.get("/", response_class=HTMLResponse)
-async def root(request: Request):
+async def root(request: Request,
+               saved_resource_page: Optional[str] = Cookie(None)
+               ):
+    if saved_resource_page:
+        _saved_resource_page = _Cookie.load(saved_resource_page)
+    else:
+        _saved_resource_page = dict(
+            opened_recipes=dict()
+        )
     context = {"request": request,
-               **saved_resource_page.dict()
+               **_saved_resource_page,
+               **resource_page.dict()
                }
     return templates.TemplateResponse("index.html", context=context)
 
@@ -430,20 +438,6 @@ def evaluate_planner(planner_model):
         for speed in sum_list_of_speeds]
     # print(f"TRIPLE VARS {result=}")
     return result
-
-
-
-@app.get("/upload_planner", response_class=HTMLResponse)
-async def upload_planner(request: Request,
-                         planner_model: Optional[str] = Cookie(None)
-                         ):
-    _planner_model = json.loads(planner_model)
-    print(f"{_planner_model=}")
-    context = {
-        "request": request,
-        **_planner_model
-        }
-    return templates.TemplateResponse("planner.html", context=context)
 
 
 if __name__ == '__main__':
