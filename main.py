@@ -362,6 +362,12 @@ class _Cookie:
                                           "base64"))
 
 
+def speeds_sorting(speed):
+    if speed.speed < 0:
+        return abs(speed.speed) * 1000000
+    return speed.speed
+
+
 @app.get("/planner", response_class=HTMLResponse)
 async def planner(request: Request,
                   planner_model: Optional[str] = Cookie(None)):
@@ -428,6 +434,9 @@ def evaluate_planner(planner_model):
             list_of_speeds += calculator.RecipeSpeed(
                 calculator.Recipe(recipe)).all
     sum_list_of_speeds = calculator.sum_items_by_rpm(list_of_speeds)
+    sorted_sum_list = sorted(sum_list_of_speeds,
+                             key=speeds_sorting,
+                             reverse=True)
     #   Group like SPEED, COUNT FOR 5h , COUNT for 1 DAY
     result = [
         (speed,
@@ -435,7 +444,7 @@ def evaluate_planner(planner_model):
          speed.quantity(time_sec=timedelta(hours=8)),
          speed.quantity(time_sec=timedelta(days=1))
          )
-        for speed in sum_list_of_speeds]
+        for speed in sorted_sum_list]
     # print(f"TRIPLE VARS {result=}")
     return result
 
