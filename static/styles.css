@@ -76,6 +76,11 @@ div.total {
 
 }
 
+div.total > p {
+    font-size: 12px;
+    margin: 8px;
+}
+
 div.recipe {
     background-color: #80808026;
     border-color: #3871a2;

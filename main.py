@@ -21,9 +21,6 @@ templates = Jinja2Templates(directory="templates")
 class RecipePageModel(BaseModel):
     recipes_for_dropdown: dict
     all_resources: dict
-    last_selected_item: str
-    last_selected_count: int
-    opened_recipes: dict
 
 
 class MinePageModel(BaseModel):
@@ -36,12 +33,10 @@ class MinePageModel(BaseModel):
     last_max_area: int
 
 
-saved_resource_page = RecipePageModel(
+resource_page = RecipePageModel(
     recipes_for_dropdown=calculator.recipes_by_operation(),
-    all_resources=calculator.all_resources(),
-    last_selected_item="copper",
-    last_selected_count=1,
-    opened_recipes=dict())
+    all_resources=calculator.all_resources(),)
+
 
 saved_mines_page = MinePageModel(
     elements=mine_calculator.elements,
@@ -63,10 +58,18 @@ async def root(request: Request):
 
 
 @app.get("/items", response_class=HTMLResponse)
-async def item(request: Request):
+async def item(request: Request,
+               saved_resource_page: Optional[str] = Cookie(None)):
 
+    if saved_resource_page:
+        _saved_resource_page = _Cookie.load(saved_resource_page)
+    else:
+        _saved_resource_page = dict(
+            opened_recipes=dict()
+        )
     context = {"request": request,
-               **saved_resource_page.dict()
+               **resource_page.dict(),
+               **_saved_resource_page
                }
     return templates.TemplateResponse("index.html", context=context)
 
@@ -78,83 +81,119 @@ async def calc_items(request: Request):
     count = int(form_data.get("count"))
     name = form_data.get("res")
 
-    saved_resource_page.last_selected_count = count
-    saved_resource_page.last_selected_item = name
-
-    result = calculator.Recipe(name, count).produce
+    recipe = calculator.Recipe(name, count)
+    result = recipe.produce
     print(f"{result=}")
+    opened_recipes = dict()
+    opened_recipes[str(recipe)] = result
 
-    saved_resource_page.opened_recipes = dict()
-    saved_resource_page.opened_recipes["0"] = result
+    saved_resource_page = {
+        "last_selected_count": count,
+        "last_selected_item": name,
+        "opened_recipes": opened_recipes
+    }
 
-    # print(saved_resource_page.dict())
     context = {"request": request,
                "result": result,
                "total": result.get("out"),
-               **saved_resource_page.dict()}
-    return templates.TemplateResponse("index.html", context=context)
+               **resource_page.dict(),
+               **saved_resource_page}
+
+    response = templates.TemplateResponse("index.html", context=context)
+
+    response.set_cookie("saved_resource_page",
+                        _Cookie.dump(saved_resource_page))
+
+    return response
 
 
 @app.post("/add_product", response_class=HTMLResponse)
-async def add_product_from_button(request: Request):
+async def add_product_from_button(
+        request: Request,
+        saved_resource_page: Optional[str] = Cookie(None)):
     form_data = await request.form()
 
     count = int(form_data.get("count"))
     key = form_data.get("key").strip()
     uuid = form_data.get("uuid").strip()
 
-    result = calculator.Recipe(key, count).produce
-    saved_resource_page.opened_recipes[uuid] = result
+    recipe = calculator.Recipe(key, count)
+    result = recipe.produce
+    _saved_resource_page = _Cookie.load(saved_resource_page)
+    _saved_resource_page['opened_recipes'][uuid] = result
 
-    ids_opened_frames = list(saved_resource_page.opened_recipes.keys())
+    ids_opened_frames = list(_saved_resource_page['opened_recipes'].keys())
     print(f"{ids_opened_frames=}")
 
     total = [ingr
-             for uuid, recipe in saved_resource_page.opened_recipes.items()
+             for uuid, recipe in _saved_resource_page['opened_recipes'].items()
              for ingr in recipe["consume"]
              if ingr.uuid not in ids_opened_frames]
-    total = calculator.sum_items_by_count( total )
+    total = calculator.sum_items_by_count(total)
 
     context = {"request": request,
                "result": result,
                "total": total,
-               **saved_resource_page.dict()}
-    return templates.TemplateResponse("index.html", context=context)
+               **resource_page.dict(),
+               **_saved_resource_page}
+
+    response = templates.TemplateResponse("index.html", context=context)
+    response.set_cookie('saved_resource_page',
+                        _Cookie.dump(_saved_resource_page))
+    return response
 
 
 @app.post("/del_product", response_class=HTMLResponse)
-async def del_product_from_button(request: Request):
+async def del_product_from_button(
+        request: Request,
+        saved_resource_page: Optional[str] = Cookie(None)
+):
     form_data = await request.form()
 
     uuid = form_data.get("uuid").strip()
 
-    saved_resource_page.opened_recipes.__delitem__(uuid)
+    _saved_resource_page = _Cookie.load(saved_resource_page)
 
-    ids_opened_frames = list(saved_resource_page.opened_recipes.keys())
+    if _saved_resource_page['opened_recipes'].get(uuid):
+        _saved_resource_page['opened_recipes'].__delitem__(uuid)
+
+    ids_opened_frames = list(_saved_resource_page['opened_recipes'].keys())
     print(f"{ids_opened_frames=}")
 
-    print(f"{saved_resource_page.opened_recipes}")
+    print(f"{_saved_resource_page['opened_recipes']}")
     total = [ingr
-             for uuid, recipe in saved_resource_page.opened_recipes.items()
+             for uuid, recipe in _saved_resource_page['opened_recipes'].items()
              for ingr in recipe["consume"]
              if ingr.uuid not in ids_opened_frames]
     total = calculator.sum_items_by_count(total)
 
     context = {"request": request,
                "total": total,
-               **saved_resource_page.dict()}
-    return templates.TemplateResponse("index.html", context=context)
+               **resource_page.dict(),
+               **_saved_resource_page}
+    response = templates.TemplateResponse("index.html", context=context)
+    response.set_cookie("saved_resource_page",
+                        _Cookie.dump(_saved_resource_page))
+    return response
 
 
 @app.post("/reload_resources", response_class=HTMLResponse)
-async def reload_resources(request: Request):
+async def reload_resources(request: Request,
+                           saved_resource_page: Optional[str] = Cookie(None)):
     updated_res = calculator.all_resources()
-    print(list(dictdiffer.diff(updated_res, saved_resource_page.all_resources)))
+    print(list(dictdiffer.diff(updated_res, resource_page.all_resources)))
 
-    saved_resource_page.all_resources = updated_res
-    saved_resource_page.recipes_for_dropdown = calculator.recipes_by_operation()
-    context = {"request": request, **saved_resource_page.dict()}
-    return templates.TemplateResponse("index.html", context=context)
+    resource_page.all_resources = updated_res
+    resource_page.recipes_for_dropdown = \
+        calculator.recipes_by_operation()
+
+    context = {"request": request,
+               **resource_page.dict(),
+               **_Cookie.load(saved_resource_page)
+               }
+
+    response = templates.TemplateResponse("index.html", context=context)
+    return response
 
 
 @app.get("/mines", response_class=HTMLResponse)
@@ -303,6 +342,17 @@ def plain_to_dict(plain_dict, base_dict):
 
 # async def save_cookies(response: Response):
 
+class _Cookie:
+    @staticmethod
+    def dump(value):
+        return codecs.encode(pickle.dumps(value, 5),
+                             encoding='base64').decode()
+
+    @staticmethod
+    def load(value):
+        return pickle.loads(codecs.decode(value.encode(),
+                                          "base64"))
+
 
 @app.get("/planner", response_class=HTMLResponse)
 async def planner(request: Request,
@@ -313,11 +363,14 @@ async def planner(request: Request,
         print("Reading from parameters")
         _planner_model = plain_to_dict(request.query_params,
                                        default_planner.dict())
+        # print(f"{_planner_model=}")
 
     elif planner_model:
         print("Reading from cookies")
-        _planner_model = pickle.loads(codecs.encode(planner_model))
-        print(f"{_planner_model=}")
+        _planner_model = _Cookie.load(planner_model)
+        # _planner_model = pickle.loads(codecs.decode(planner_model.encode(),
+        #                                             "base64"))
+        # print(f"{_planner_model=}")
 
     else:
         _planner_model = default_planner.dict()
@@ -331,16 +384,24 @@ async def planner(request: Request,
         }
 
     response = templates.TemplateResponse("planner.html", context=context)
-    if save_cookies:
+    try:
+
+        # value = codecs.encode(pickle.dumps(_planner_model, 5),
+        #                       encoding='base64').decode()
+        value = _Cookie.dump(_planner_model)
+        print(f"{value=}")
         response.set_cookie(key='planner_model',
-                            value=pickle.dumps(_planner_model, 0).decode()
+                            value=value
                             )
+    except Exception as e:
+        print(f"Caught error: {e}")
+    response.set_cookie(key='1', value='1')
     return response
 
 
 def evaluate_planner(planner_model):
 
-    print(f"Starting evaluate_planner {planner_model}")
+    # print(f"Starting evaluate_planner {planner_model}")
     list_of_speeds = []
     for operation, data in planner_model.items():
         # print(f"{operation=} {data=}")
@@ -367,7 +428,7 @@ def evaluate_planner(planner_model):
          speed.quantity(time_sec=timedelta(days=1))
          )
         for speed in sum_list_of_speeds]
-    print(f"TRIPLE VARS {result=}")
+    # print(f"TRIPLE VARS {result=}")
     return result
 
 

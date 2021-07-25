@@ -269,9 +269,9 @@ class RecipeSpeed:
         speed_consumings = [
             ingr.rpm(time_sec=self.product['time'].total_seconds()) * (-1 * multiplier)
             for ingr in self.product['consume']]
-        print(f" {speed_consumings=}  {speed_production=}")
+        #print(f" {speed_consumings=}  {speed_production=}")
 
-        print(f"{multiplier=}")
+        #print(f"{multiplier=}")
         speed_consumings.append(speed_production)
         return speed_consumings
 

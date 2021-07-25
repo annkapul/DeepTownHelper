@@ -74,18 +74,19 @@
                         <label> Count:
                         <input type="number" name="count_of_mines" value="{{ count_of_mines }}"/></label>
                     </div>
-                    <div class="header"> &nbsp&nbsp&nbsp&nbsp&nbspArea&nbsp&nbsp&nbsp&nbsp&nbsp&nbspMineLvl</div>
+                    <div class="header">
+                        &nbsp&nbsp&nbspMineLvl&nbsp&nbsp&nbsp&nbsp&nbsp&nbspArea</div>
                     {% for area, lvl in mines.items() %}
                     <div>
-                        <input type="number" value="{{ area }}" class="small_input" name="minearea_{{ area }}" max="120"/>
                         <input type="number" value="{{ lvl }}" class="xsmall_input" name="minelvl_{{ area }}" max="9" />
+                        <input type="number" value="{{ area }}" class="small_input" name="minearea_{{ area }}" max="120"/>
                     </div>
                     {% endfor %}
                     {% if  count_of_mines > (mines |length) %}
                     {% for number in range(count_of_mines - (mines |length)) %}
                      <div>
-                        <input type="number" value="" class="small_input"  name="mineareaN_{{ number }}" max="120"/>
-                        <input type="number" value="" class="xsmall_input" name="minelvlN_{{ number }}" max="9"/>
+                         <input type="number" value="" class="xsmall_input" name="minelvlN_{{ number }}" max="9"/>
+                         <input type="number" value="" class="small_input"  name="mineareaN_{{ number }}" max="120"/>
                     </div>
                     {% endfor %}
                     {% endif %}
