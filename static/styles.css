@@ -193,8 +193,6 @@ table.planning > tbody > tr:nth-child(2n)  {
     background-color: var(--main-bg-color);
 }
 
-
-
 select {
   width: 300px;
   border-radius:2px;

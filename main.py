@@ -86,8 +86,11 @@ async def item(request: Request,
 async def calc_items(request: Request):
     form_data = await request.form()
 
-    count = int(form_data.get("count"))
+    count = form_data.get("count")
     name = form_data.get("res")
+
+    if isinstance(count, str):
+        count = eval(count)
 
     recipe = calculator.Recipe(name, count)
     result = recipe.produce
@@ -220,7 +223,7 @@ async def get_best_mines(request: Request):
     item = form_data.get("item")
     mines_count = int(form_data.get("mines_count"))
     mines_level = int(form_data.get("mines_level"))
-    time_minutes = int(form_data.get("time_minutes"))
+    time_minutes = form_data.get("time_minutes")
     max_area = int(form_data.get("max_area"))
 
     saved_mines_page.last_selected_item = item

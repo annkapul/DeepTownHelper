@@ -65,8 +65,11 @@ class Mine:
 def find_best_mines(item: Item,
                     mines_count: int = 1,
                     mines_level: int = 1,
-                    time_minutes: int = 1440,
+                    time_minutes: (int, str) = 1440,
                     max_area: int = 120):
+    if isinstance(time_minutes, str):
+        time_minutes = eval(time_minutes)
+
     d = {area: Mine(area=area, level=mines_level).produce_by_time(time_minutes)
          for area, elements in mines.items()
          if item.key in elements.keys() and area <= max_area
