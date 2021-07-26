@@ -16,6 +16,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 app.mount("/images", StaticFiles(directory="images"), name="images")
 templates = Jinja2Templates(directory="templates")
 
+cookies_expire_time = 2592000
 
 class RecipePageModel(BaseModel):
     recipes_for_dropdown: dict
@@ -113,7 +114,8 @@ async def calc_items(request: Request):
     response = templates.TemplateResponse("index.html", context=context)
 
     response.set_cookie("saved_resource_page",
-                        _Cookie.dump(saved_resource_page))
+                        _Cookie.dump(saved_resource_page),
+                        max_age=cookies_expire_time)
 
     return response
 
@@ -150,7 +152,8 @@ async def add_product_from_button(
 
     response = templates.TemplateResponse("index.html", context=context)
     response.set_cookie('saved_resource_page',
-                        _Cookie.dump(_saved_resource_page))
+                        _Cookie.dump(_saved_resource_page),
+                        max_age=cookies_expire_time)
     return response
 
 
@@ -184,7 +187,8 @@ async def del_product_from_button(
                **_saved_resource_page}
     response = templates.TemplateResponse("index.html", context=context)
     response.set_cookie("saved_resource_page",
-                        _Cookie.dump(_saved_resource_page))
+                        _Cookie.dump(_saved_resource_page),
+                        max_age=cookies_expire_time)
     return response
 
 
@@ -408,11 +412,11 @@ async def planner(request: Request,
         value = _Cookie.dump(_planner_model)
         print(f"{value=}")
         response.set_cookie(key='planner_model',
-                            value=value
+                            value=value,
+                            max_age=cookies_expire_time
                             )
     except Exception as e:
         print(f"Caught error: {e}")
-    response.set_cookie(key='1', value='1')
     return response
 
 
