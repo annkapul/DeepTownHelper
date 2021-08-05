@@ -1,9 +1,11 @@
+import collections
+
 from fastapi import FastAPI, Request, Form, Cookie, File, UploadFile, Response
 from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
-from typing import Dict, TypeVar, Union, Any, Optional
+from typing import Dict, TypeVar, Union, Any, Optional, OrderedDict
 
 import calculator
 import mine_calculator
@@ -255,7 +257,7 @@ async def get_best_mines(request: Request):
 
 class PlannerModel(BaseModel):
     recipes_for_dropdown: dict
-    mines: Dict[int, int]  # area, lvl
+    mines: OrderedDict[int, int]   # # area, lvl
     smelting: Dict[int, Union[Any, None]]  # number, recipe
     crafting: Dict[int, Union[Any, None]]  # number, recipe
     chemistry: Dict[int, Union[Any, None]]  # number, recipe
@@ -267,6 +269,7 @@ class PlannerModel(BaseModel):
 
 default_planner = PlannerModel(
     recipes_for_dropdown=calculator.recipes_by_operation(),
+    count_of_mines=5,
     mines={1: 9,
            2: 7,
            3: 6},
@@ -323,13 +326,13 @@ default_planner = PlannerModel(
     boosters={
         "smelting": ["bot"]
     },
-    count_of_mines=5
+
     )
 
 
 def plain_to_dict(plain_dict, base_dict):
     nested_dict = base_dict
-    nested_dict["mines"] = dict()
+    nested_dict["mines"] = collections.OrderedDict()
     for key, value in plain_dict.items():
         # print(f"{key=}, {value=}")
         if key in ["count_of_mines"]:
@@ -398,6 +401,9 @@ async def planner(request: Request,
         print("QUERY IS EMPTY!")
 
     result = evaluate_planner(_planner_model)
+
+    _planner_model["mines"] = collections.OrderedDict(
+        sorted(_planner_model['mines'].items()))
     context = {
         "request": request,
         "result": result,
@@ -406,13 +412,8 @@ async def planner(request: Request,
 
     response = templates.TemplateResponse("planner.html", context=context)
     try:
-
-        # value = codecs.encode(pickle.dumps(_planner_model, 5),
-        #                       encoding='base64').decode()
-        value = _Cookie.dump(_planner_model)
-        print(f"{value=}")
         response.set_cookie(key='planner_model',
-                            value=value,
+                            value=_Cookie.dump(_planner_model),
                             max_age=cookies_expire_time
                             )
     except Exception as e:
