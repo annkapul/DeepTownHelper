@@ -11,7 +11,7 @@
         {{ macros.menu() }}
 
         <table>
-        {% for mine_area, mine_elements in mines.items() %}
+        {% for mine_area, mine_elements in all_mines.items() %}
         <tr>
             <td><b>{{ mine_area }}</b></td>
             {% for elem, value in mine_elements.items() %}

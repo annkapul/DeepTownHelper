@@ -20,14 +20,19 @@ templates = Jinja2Templates(directory="templates")
 
 cookies_expire_time = 2592000
 
-class RecipePageModel(BaseModel):
+
+class GlobalModel(BaseModel):
     recipes_for_dropdown: dict
+    all_resources: dict
+    all_mines: dict
+
+
+class RecipePageModel(BaseModel):
     all_resources: dict
 
 
 class MinePageModel(BaseModel):
     elements: list
-    mines: dict
     last_selected_item: str
     last_mines_count: int
     last_mines_level: int
@@ -35,14 +40,15 @@ class MinePageModel(BaseModel):
     last_max_area: int
 
 
-resource_page = RecipePageModel(
+global_data = GlobalModel(
     recipes_for_dropdown=calculator.recipes_by_operation(),
-    all_resources=calculator.all_resources(),)
+    all_resources=calculator.all_resources(),
+    all_mines=mine_calculator.all_mines(),
+)
 
 
 saved_mines_page = MinePageModel(
     elements=mine_calculator.elements,
-    mines=mine_calculator.all_mines(),
     last_selected_item='coal',
     last_mines_count=1,
     last_mines_level=1,
@@ -63,7 +69,7 @@ async def root(request: Request,
         )
     context = {"request": request,
                **_saved_resource_page,
-               **resource_page.dict()
+               **global_data.dict()
                }
     return templates.TemplateResponse("index.html", context=context)
 
@@ -79,7 +85,7 @@ async def item(request: Request,
             opened_recipes=dict()
         )
     context = {"request": request,
-               **resource_page.dict(),
+               **global_data.dict(),
                **_saved_resource_page
                }
     return templates.TemplateResponse("index.html", context=context)
@@ -110,7 +116,7 @@ async def calc_items(request: Request):
     context = {"request": request,
                "result": result,
                "total": result.get("out"),
-               **resource_page.dict(),
+               **global_data.dict(),
                **saved_resource_page}
 
     response = templates.TemplateResponse("index.html", context=context)
@@ -120,6 +126,13 @@ async def calc_items(request: Request):
                         max_age=cookies_expire_time)
 
     return response
+
+
+@app.get("/info")
+async def info():
+    return {
+        **global_data.dict()
+    }
 
 
 @app.post("/add_product", response_class=HTMLResponse)
@@ -149,7 +162,7 @@ async def add_product_from_button(
     context = {"request": request,
                "result": result,
                "total": total,
-               **resource_page.dict(),
+               **global_data.dict(),
                **_saved_resource_page}
 
     response = templates.TemplateResponse("index.html", context=context)
@@ -185,7 +198,7 @@ async def del_product_from_button(
 
     context = {"request": request,
                "total": total,
-               **resource_page.dict(),
+               **global_data.dict(),
                **_saved_resource_page}
     response = templates.TemplateResponse("index.html", context=context)
     response.set_cookie("saved_resource_page",
@@ -198,14 +211,14 @@ async def del_product_from_button(
 async def reload_resources(request: Request,
                            saved_resource_page: Optional[str] = Cookie(None)):
     updated_res = calculator.all_resources()
-    print(list(dictdiffer.diff(updated_res, resource_page.all_resources)))
+    print(list(dictdiffer.diff(updated_res, global_data.all_resources)))
 
-    resource_page.all_resources = updated_res
-    resource_page.recipes_for_dropdown = \
+    global_data.all_resources = updated_res
+    global_data.recipes_for_dropdown = \
         calculator.recipes_by_operation()
 
     context = {"request": request,
-               **resource_page.dict(),
+               **global_data.dict(),
                **_Cookie.load(saved_resource_page)
                }
 
@@ -217,7 +230,8 @@ async def reload_resources(request: Request,
 async def mines(request: Request):
     context = {
         "request": request,
-        **saved_mines_page.dict()
+        **saved_mines_page.dict(),
+        **global_data.dict()
         }
     return templates.TemplateResponse("mines.html", context=context)
 
@@ -251,12 +265,12 @@ async def get_best_mines(request: Request):
         "request": request,
         "result": result,
         **saved_mines_page.dict(),
+        **global_data.dict()
         }
     return templates.TemplateResponse("mines.html", context=context)
 
 
 class PlannerModel(BaseModel):
-    recipes_for_dropdown: dict
     mines: OrderedDict[int, int]   # # area, lvl
     smelting: Dict[int, Union[Any, None]]  # number, recipe
     crafting: Dict[int, Union[Any, None]]  # number, recipe
@@ -268,7 +282,6 @@ class PlannerModel(BaseModel):
 
 
 default_planner = PlannerModel(
-    recipes_for_dropdown=calculator.recipes_by_operation(),
     count_of_mines=5,
     mines={1: 9,
            2: 7,
@@ -407,7 +420,8 @@ async def planner(request: Request,
     context = {
         "request": request,
         "result": result,
-        **_planner_model
+        **_planner_model,
+        **global_data.dict()
         }
 
     response = templates.TemplateResponse("planner.html", context=context)
