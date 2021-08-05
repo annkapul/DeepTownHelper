@@ -445,10 +445,33 @@ polished_amber:
     out: 1
     time_sec: 30
 
+polished_alexandrite:
+  jewelling:
+    in:
+      alexandrite: 5
+    out: 1
+    time_sec: 60
+
+polished_amethyst:
+  jewelling:
+    in:
+      amethyst: 5
+    out: 1
+    time_sec: 60
+
 amber_bracelet:
   jewelling:
     in:
       polished_amber: 1
+      silver_bar: 1
+    out: 1
+    time_sec: 120
+
+haircomb:
+  jewelling:
+    in:
+      polished_amethyst: 15
+      polished_alexandrite: 10
       silver_bar: 1
     out: 1
     time_sec: 120
