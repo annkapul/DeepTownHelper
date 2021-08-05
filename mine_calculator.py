@@ -11,7 +11,7 @@ modifier = None
 
 
 def all_mines():
-    return yaml.load(open("mines.yaml"), Loader=yaml.SafeLoader)
+    return yaml.load(open("constants/mines.yaml"), Loader=yaml.SafeLoader)
 
 
 mines = all_mines()

@@ -13,7 +13,7 @@ def all_resources():
     """
     :return: dict
     """
-    resources = yaml.load(open("resources.yaml"), Loader=yaml.SafeLoader)
+    resources = yaml.load(open("constants/resources.yaml"), Loader=yaml.SafeLoader)
     for item_key, item_data in resources.items():
         item_data['name'] = item_data.get('name') or \
                             item_key.replace("_", " ").title()
