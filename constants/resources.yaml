@@ -459,6 +459,13 @@ polished_amethyst:
     out: 1
     time_sec: 60
 
+polished_sapphire:
+  jewelling:
+    in:
+      sapphire: 5
+    out: 1
+    time_sec: 60
+
 amber_bracelet:
   jewelling:
     in:
@@ -475,6 +482,46 @@ haircomb:
       silver_bar: 1
     out: 1
     time_sec: 120
+
+mayan_calendar:
+  jewelling:
+    in:
+      gold_bar: 10
+      silver_bar: 2
+    out: 1
+    time_sec: 120
+
+emerald_ring:
+  jewelling:
+    in:
+      gold_bar: 1
+      polished_emerald: 1
+    out: 1
+    time_sec: 300
+
+polished_obsidian:
+  jewelling:
+    in:
+      obsidian: 5
+    out: 1
+    time_sec: 60
+
+obsidian_knife:
+  jewelling:
+    in:
+      polished_obsidian: 50
+      tree: 2
+      silver_bar: 1
+    out: 1
+    time_sec: 120
+
+sapphire_crystal_glass:
+  jewelling:
+    in:
+      polished_sapphire: 10
+    out: 1
+    time_sec: 120
+
 
 ##################### Planting ##############################
 

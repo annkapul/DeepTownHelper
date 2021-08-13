@@ -1,6 +1,6 @@
 
 import calculator
-from fastapi import APIRouter, Request, Cookie
+from fastapi import APIRouter, Request, Cookie, status
 from fastapi.responses import HTMLResponse
 from typing import Optional
 
@@ -36,9 +36,8 @@ async def info():
     }
 
 
-@router.post("/reload_resources", response_class=HTMLResponse)
-async def reload_resources(request: Request,
-                           saved_resource_page: Optional[str] = Cookie(None)):
+@router.post("/reload_resources", status_code=status.HTTP_202_ACCEPTED)
+async def reload_resources(request: Request):
     updated_res = calculator.all_resources()
     print(list(dictdiffer.diff(updated_res, global_data.all_resources)))
 
@@ -47,9 +46,7 @@ async def reload_resources(request: Request,
         calculator.recipes_by_operation()
 
     context = {"request": request,
-               **global_data.dict(),
-               **_Cookie.load(saved_resource_page)
+               **global_data.dict()
                }
 
-    response = templates.TemplateResponse("index.html", context=context)
-    return response
+    return {"updated": True}
