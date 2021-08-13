@@ -125,7 +125,7 @@ body.crafting_page {
 
 body.planner_page {
     display: grid;
-    grid-template-columns: 10% 40% 55%;
+    grid-template-columns: 10% 50% 40%;
     grid-auto-flow: rows;
     grid-template-areas:
     'menu in out .'

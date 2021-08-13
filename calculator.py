@@ -162,7 +162,7 @@ def sum_items_by_rpm(speeds: SpeedVector) -> SpeedVector:
             rpm_by_items[speed_obj.item.key] = speed_obj.speed
         else:
             rpm_by_items[speed_obj.item.key] += speed_obj.speed
-    # print(f"{rpm_by_items=}")
+    print(f"{rpm_by_items=}")
     return [Speed(Item(key), speed_rpm=rpm)
             for key, rpm
             in rpm_by_items.items()]

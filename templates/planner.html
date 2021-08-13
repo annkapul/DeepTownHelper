@@ -75,7 +75,7 @@
                         <input type="number" name="count_of_mines" value="{{ count_of_mines }}"/></label>
                     </div>
                     <div class="header">
-                        &nbsp&nbsp&nbspMineLvl&nbsp&nbsp&nbsp&nbsp&nbsp&nbspArea</div>
+                        MineLvl&nbsp&nbsp&nbsp&nbsp&nbsp&nbspArea</div>
                     {% for area, lvl in mines.items() %}
                     <div>
                         <input type="number" value="{{ lvl }}" class="xsmall_input" name="minelvl_{{ area }}" max="9" />
@@ -92,7 +92,48 @@
                     {% endif %}
 
                 </div>
+
+                <div  class="light-bound">
+                    <!--  Part for Chemical Mines-->
+
+                    <div class="header">Chemical Mines</div>
+                    <div class="div_input">
+                        <label> Count:
+                        <input type="number" name="count_of_chmines" value="{{ count_of_chmines }}"/></label>
+                    </div>
+                    <div class="header">
+                        MineLvl&nbsp&nbsp&nbsp&nbsp&nbsp&nbspResource</div>
+                    {% for id, data in chemmines.items() %}
+                        <div>
+                            <input type="number" value="{{ data.1 }}" class="xsmall_input" name="chminelvl_{{ id }}" max="4" />
+                            <select class="medium_input" name="chmineres_{{ id }}">
+                                <option value=""> == empty == </option>
+                                {% for res in chemicals_for_dropdown %}
+                                <option value="{{ res }}"
+                                 {%- if  res == data.0 -%} selected {% endif %}
+                                >{{ res | title }}</option>
+                                {% endfor%}
+                            </select>
+                        </div>
+                    {% endfor %}
+                    {% if count_of_chmines > (chemmines |length) %}
+                        {% for number in range(chemmines |length +1, count_of_chmines+1) %}
+                         <div>
+
+                             <input type="number" value="" class="xsmall_input" name="chminelvl_{{ number }}" max="9"/>
+                             <select class="medium_input" name="chmineres_{{ number }}">
+                                    <option value=""> == empty == </option>
+                                    {% for res in chemicals_for_dropdown %}
+                                    <option value="{{ res }}">{{ res | title }}</option>
+                                    {% endfor%}
+                             </select>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+
+                </div>
             </div>
+
             <input type="submit"/>
         </form>
 

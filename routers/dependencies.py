@@ -5,7 +5,7 @@ from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 import calculator
 import mine_calculator
-from typing import Dict, Union, Any, OrderedDict
+from typing import Dict, Union, Any, OrderedDict, Tuple
 
 cookies_expire_time = 2592000
 
@@ -28,6 +28,7 @@ class GlobalModel(BaseModel):
     recipes_for_dropdown: dict
     all_resources: dict
     all_mines: dict
+    chemicals_for_dropdown: list
 
 
 class RecipePageModel(BaseModel):
@@ -47,6 +48,7 @@ global_data = GlobalModel(
     recipes_for_dropdown=calculator.recipes_by_operation(),
     all_resources=calculator.all_resources(),
     all_mines=mine_calculator.all_mines(),
+    chemicals_for_dropdown=[res.name for res in mine_calculator.CHEM]
 )
 
 
@@ -62,6 +64,7 @@ saved_mines_page = MinePageModel(
 
 class PlannerModel(BaseModel):
     mines: OrderedDict[int, int]   # # area, lvl
+    chemmines: OrderedDict[int, Tuple[str, int]]
     smelting: Dict[int, Union[Any, None]]  # number, recipe
     crafting: Dict[int, Union[Any, None]]  # number, recipe
     chemistry: Dict[int, Union[Any, None]]  # number, recipe
@@ -69,6 +72,7 @@ class PlannerModel(BaseModel):
     planting: Dict[int, Union[Any, None]]  # number, Recipe
     boosters: Dict[str, Any]
     count_of_mines: int
+    count_of_chmines: int
 
 
 default_planner = PlannerModel(
@@ -76,6 +80,12 @@ default_planner = PlannerModel(
     mines={1: 9,
            2: 7,
            3: 6},
+
+    count_of_chmines=3,
+    chemmines={
+        1: (mine_calculator.CHEM.sulfur.name, 1)
+    },
+
     smelting={
         0: "iron_bar",
         1: "",

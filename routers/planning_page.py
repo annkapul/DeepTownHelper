@@ -16,11 +16,13 @@ router = APIRouter()
 
 
 def plain_to_dict(plain_dict, base_dict):
+    # print(f"{plain_dict=}")
+    # print(f"{base_dict=}")
     nested_dict = base_dict
     nested_dict["mines"] = collections.OrderedDict()
     for key, value in plain_dict.items():
         # print(f"{key=}, {value=}")
-        if key in ["count_of_mines"]:
+        if key in ["count_of_mines", "count_of_chmines"]:
             nested_dict[key] = int(value)
             continue
         operation_name, number = key.split("_")
@@ -35,11 +37,22 @@ def plain_to_dict(plain_dict, base_dict):
             nested_dict['mines'][int(value)] = int(plain_dict[f'minelvl_{number}'])
             continue
         if operation_name == "mineareaN":
-            if not plain_dict[f'minelvlN_{number}'] or not plain_dict[f'mineareaN_{number}']: continue
+            if not plain_dict[f'minelvlN_{number}'] or not plain_dict[f'mineareaN_{number}']:
+                continue
 
             nested_dict['mines'][int(value)] = int(plain_dict[f'minelvlN_{number}'])
             continue
+
+        if operation_name == "chminelvl":
+            if not plain_dict[f'chmineres_{number}']:
+                continue
+            nested_dict['chemmines'][int(number)] = (str(plain_dict[f'chmineres_{number}']), int(value))
+            # print(f"CHEMMINES {operation_name=} {value=}")
+            continue
+        if operation_name == "chmineres":
+            continue
         if "minelvl" in operation_name: continue
+    # print(f"after {nested_dict=}")
     return nested_dict
 
 
@@ -111,12 +124,18 @@ def evaluate_planner(planner_model):
                 list_of_speeds += mine_calculator.Mine(area=area,
                                                        level=lvl).get_items_speed()
             continue
+        if operation in ['chemmines']:
+            for resource, lvl in data.values():
+                list_of_speeds += mine_calculator.ChemMine(resource=mine_calculator.CHEM[resource],
+                                                           level=lvl).get_items_speed()
         # Define speeds for smelting / crafting etc
-        for _, recipe in data.items():
-            if recipe == "" or recipe is None: continue
-            list_of_speeds += calculator.RecipeSpeed(
-                calculator.Recipe(recipe)).all
+        if operation in ["smelting", "crafting", "jewelling", "planting", "chemistry"]:
+            for _, recipe in data.items():
+                if recipe == "" or recipe is None: continue
+                list_of_speeds += calculator.RecipeSpeed(
+                    calculator.Recipe(recipe)).all
     sum_list_of_speeds = calculator.sum_items_by_rpm(list_of_speeds)
+    print(f"{sum_list_of_speeds=}")
     sorted_sum_list = sorted(sum_list_of_speeds,
                              key=speeds_sorting,
                              reverse=True)
