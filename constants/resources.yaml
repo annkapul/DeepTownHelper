@@ -82,6 +82,20 @@ silver_bar:
     out: 1
     time_sec: 60
 
+lutetium_bar:
+  smelting:
+    in:
+      lutetium: 5
+    out: 1
+    time_sec: 60
+
+magnetite_bar:
+  smelting:
+    in:
+      magnetite_ore: 5
+    out: 1
+    time_sec: 60
+
 ############ CHEMISTRY ####################################
 sulfuric_acid:
   chemistry:
@@ -155,6 +169,23 @@ refined_oil:
       lab_flask: 1
     out: 1
     time_sec: 1800
+
+magnetite_ore:
+  chemistry:
+    in:
+      iron_bar: 10
+      oxygen: 5
+      green_laser: 5
+    out: 1
+    time_sec: 360
+
+lutetium:
+  chemistry:
+    in:
+      sulfuric_acid: 1
+      lutetium_ore: 20
+    out: 1
+    time_sec: 600
 
 rubber:
   chemistry:
@@ -294,6 +325,15 @@ compressor:
     out: 1
     time_sec: 180
 
+oxygen_cylinder:
+  crafting:
+    in:
+      oxygen: 5
+      gas_cylinder: 1
+      compressor: 1
+    out: 1
+    time_sec: 120
+
 motherboard:
   crafting:
     in:
@@ -319,6 +359,42 @@ gas_cylinder:
     out: 3
     time_sec: 180
 
+mirror_laser:
+  crafting:
+    in:
+      mirror: 3
+      lamp: 1
+      battery: 1
+    out: 2
+    time_sec: 120
+
+mirror:
+  crafting:
+    in:
+      silver_bar: 1
+      glass: 1
+    out: 1
+    time_sec: 120
+
+battery:
+  crafting:
+    in:
+      copper_bar: 5
+      iron_bar: 1
+      amber: 1
+    out: 1
+    time_sec: 120
+
+electrical_engine:
+  crafting:
+    in:
+      aluminium_bar: 20
+      magnet: 1
+      insulated_wire: 50
+    out: 1
+    time_sec: 300
+
+
 gear:
   crafting:
     in:
@@ -336,6 +412,13 @@ engine_ir:
       aluminium_bar: 3120
     out: 1
     time_sec: 3600
+
+magnet:
+  crafting:
+    in:
+      magnetite_bar: 1
+    out: 1
+    time_sec: 120
 
 optic_fiber:
   crafting:
@@ -408,7 +491,7 @@ rocket_type_c:
     in:
       red_beryl: 1
       sapphire_crystal_glass: 100
-      magnetit_bar: 1
+      magnetite_bar: 1
     out: 1
     time_sec: 1800
 
